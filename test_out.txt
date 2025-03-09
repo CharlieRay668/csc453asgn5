@@ -22,3 +22,5336 @@ make all
 make[1]: Entering directory `/home/chray/csc453/asgn5'
 gcc -Wall -Wextra -g -O2  -c minls.c
 gcc -Wall -Wextra -g -O2  -c minutil.c
+gcc -Wall -Wextra -g -O2  -o minls minls.o minutil.o
+gcc -Wall -Wextra -g -O2  -c minget.c
+gcc -Wall -Wextra -g -O2  -o minget minget.o minutil.o
+make[1]: Leaving directory `/home/chray/csc453/asgn5'
+
+---------------
+checking for executables
+---------------
+
+----------------------
+Testing verbose behavior
+----------------------
+minls -v Images/TestImage
+./minls -v /home/pn-cs453/Given/Asgn5/Images/TestImage
+Inside process args
+Option -v
+optind: 3, argc: 3
+Setting path
+Path: (null)
+Reading superblock
+Superblock Contents:
+  ninodes        = 768
+  i_blocks       = 1
+  z_blocks       = 1
+  firstdata      = 16
+  log_zone_size  = 0
+  max_file       = 4294967295
+  zones          = 360
+  magic          = 0x4d5a
+  blocksize      = 4096
+  subversion     = 0
+
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 65536, data_offset: 65536
+drwxrwxrwx       384 .
+Cur_pos: 65600, data_offset: 65536
+drwxrwxrwx       384 ..
+Cur_pos: 65664, data_offset: 65536
+Cur_pos: 65728, data_offset: 65536
+-rw-r--r--     73991 Other
+Cur_pos: 65792, data_offset: 65536
+drwxr-xr-x      3200 src
+Cur_pos: 65856, data_offset: 65536
+-rw-r--r--        11 Hello
+Cur_pos: 65920, data_offset: 65536
+
+minls -v -p 0 Images/HardDisk
+./minls -v -p 0 /home/pn-cs453/Given/Asgn5/Images/HardDisk
+Inside process args
+Option -v
+Option -p with value '0'
+optind: 5, argc: 5
+Setting path
+Path: (null)
+Reading superblock
+Invalid super block magic number
+: Success
+
+minls -v -p 0 -s 0 Images/HardDisk
+Inside process args
+Option -v
+Option -p with value '0'
+Option -s with value '0'
+optind: 7, argc: 7
+Setting path
+Path: (null)
+Reading superblock
+Superblock Contents:
+  ninodes        = 768
+  i_blocks       = 1
+  z_blocks       = 1
+  firstdata      = 16
+  log_zone_size  = 0
+  max_file       = 4294967295
+  zones          = 360
+  magic          = 0x4d5a
+  blocksize      = 4096
+  subversion     = 0
+
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 74752, data_offset: 74752
+drwxrwxrwx       640 .
+Cur_pos: 74816, data_offset: 74752
+drwxrwxrwx       640 ..
+Cur_pos: 74880, data_offset: 74752
+drwxr-xr-x       128 usr
+Cur_pos: 74944, data_offset: 74752
+drwxr-xr-x       128 tmp
+Cur_pos: 75008, data_offset: 74752
+drwxr-xr-x      2624 bin
+Cur_pos: 75072, data_offset: 74752
+drwxr-xr-x      1472 etc
+Cur_pos: 75136, data_offset: 74752
+drwxr-xr-x       768 sbin
+Cur_pos: 75200, data_offset: 74752
+drwxr-xr-x     14144 dev
+Cur_pos: 75264, data_offset: 74752
+drwxr-xr-x       192 lib
+Cur_pos: 75328, data_offset: 74752
+drwxr-xr-x       256 boot
+Cur_pos: 75392, data_offset: 74752
+
+
+------------------------
+Running the application 
+------------------------
+
+   =======================================================================
+  Test                                                          Status
+       Cmd: Prog Arguments                                
+   =======================================================================
+  1 -- Usage test                                                       ok.
+       Cmd: minls -h                                       
+  2 -- unparitioned, blank                                          FAILED.
+       Cmd: minls BlankDisk                                
+  3 -- unpartitioned, files                                         FAILED.
+       Cmd: minls TestImage                                
+  4 -- unpartitioned, bad superblock                                    ok.
+       Cmd: minls RandomDisk                               
+  5 -- partitioned, part 0                                          FAILED.
+       Cmd: minls -p 0 Partitioned                         
+  6 -- partitioned, part 1                                          FAILED.
+       Cmd: minls -p 1 Partitioned                         
+  7 -- partitioned, part 2                                          FAILED.
+       Cmd: minls -p 2 Partitioned                         
+  8 -- partitioned, part 3                                          FAILED.
+       Cmd: minls -p 3 Partitioned                         
+  9 -- partitioned, bad part                                            ok.
+       Cmd: minls -p 5 Partitioned                         
+ 10 -- partitioned, no part                                             ok.
+       Cmd: minls Partitioned                              
+ 11 -- partitioned, not minix                                           ok.
+       Cmd: minls -p 1 HardDisk                            
+ 12 -- subpart., good sub                                           FAILED.
+       Cmd: minls -p 0 -s 0 HardDisk                       
+ 13 -- subpart., bad sub                                                ok.
+       Cmd: minls -p 0 -s 1 HardDisk                       
+ 14 -- unpartitioned, w/filename                                    FAILED.
+       Cmd: minls TestImage /Hello                         
+ 15 -- partitioned, w/filename, p0                                  FAILED.
+       Cmd: minls -p 0 Partitioned /Message                
+ 16 -- partitioned, w/filename, p1                                  FAILED.
+       Cmd: minls -p 1 Partitioned /Message                
+ 17 -- partitioned, w/filename, p2                                  FAILED.
+       Cmd: minls -p 2 Partitioned /Message                
+ 18 -- partitioned, w/filename, p3                                  FAILED.
+       Cmd: minls -p 3 Partitioned /Message                
+ 19 -- subpart., no filename s0                                     FAILED.
+       Cmd: minls -p 0 -s 0 HardDisk                       
+ 20 -- subpart., no filename s2                                     FAILED.
+       Cmd: minls -p 0 -s 2 HardDisk                       
+ 21 -- subpart., w/filename                                         FAILED.
+       Cmd: minls -p 0 -s 2 HardDisk /home/pnico/Message   
+ 22 -- subpart., w/bad filename                                         ok.
+       Cmd: minls -p 0 -s 0 HardDisk /home/pnico/Message   
+ 23 -- directories                                                  FAILED.
+       Cmd: minls Files /Files                             
+ 24 -- directories                                                  FAILED.
+       Cmd: minls Files /Files/0000_Zones                  
+ 25 -- directories                                                  FAILED.
+       Cmd: minls Files /Files/0000_Zone                   
+ 26 -- directories                                                  FAILED.
+       Cmd: minls Files /Files/0007_Zones                  
+ 27 -- directories                                                  FAILED.
+       Cmd: minls Files /Files/0010_Zones                  
+ 28 -- directories                                                  FAILED.
+       Cmd: minls Files /Files/1032_Zones                  
+ 29 -- directories                                                  FAILED.
+       Cmd: minls Files /DeepPaths/a/b/c/d/e/i/j/k/Files   
+ 30 -- directories                                                  FAILED.
+       Cmd: minls Files /DeepPaths/a/b/c/d/e/i/j/k/Files/Message 
+ 31 -- multi-zone directory                                         FAILED.
+       Cmd: minls BigDirectories                           
+ 32 -- multi-zone directory (file)                                  FAILED.
+       Cmd: minls BigDirectories LastFile                  
+ 33 -- indirect directory                                           FAILED.
+       Cmd: minls BigIndirectDirs Level1/Level2            
+ 34 -- indirect directory (file)                                    FAILED.
+       Cmd: minls BigIndirectDirs Level1/Level2/LastFile   
+ 35 -- directories-deleted                                          FAILED.
+       Cmd: minls Files /Deleted                           
+ 36 -- directories-ok file                                          FAILED.
+       Cmd: minls Files /Deleted/File-10                   
+ 37 -- directories-deleted file                                     FAILED.
+       Cmd: minls Files /Deleted/File-05                   
+ 38 -- 1k blocks. dir.                                              FAILED.
+       Cmd: minls SmallBlocks--1k                          
+ 39 -- 1k blocks. file.                                             FAILED.
+       Cmd: minls SmallBlocks--1k DirTwo/FileTwo           
+ 40 -- 16k zones. dir.                                              FAILED.
+       Cmd: minls BigZones-16k                             
+ 41 -- 16k zones. file.                                             FAILED.
+       Cmd: minls BigZones-16k /DirOne/FileTwo             
+ 42 -- 64k zones. dir                                               FAILED.
+       Cmd: minls ReallyBigZones-64k                       
+ 43 -- 64k zones. file                                              FAILED.
+       Cmd: minls ReallyBigZones-64k DirTwo/FileOne        
+ 44 -- 64k zones. longpath                                          FAILED.
+       Cmd: minls ReallyBigZones-64k /./.././../DirTwo/FileOne 
+ 45 -- Permissions 777                                              FAILED.
+       Cmd: minls Files /Permissions/777                   
+ 46 -- Permissions 755                                              FAILED.
+       Cmd: minls Files /Permissions/755                   
+ 47 -- Permissions 753                                              FAILED.
+       Cmd: minls Files /Permissions/753                   
+ 48 -- Permissions 357                                              FAILED.
+       Cmd: minls Files /Permissions/357                   
+ 49 -- Permissions 000                                              FAILED.
+       Cmd: minls Files /Permissions/000                   
+ 50 -- unpartitioned, w/filename                                        ok.
+       Cmd: minget TestImage /Hello                         
+ 51 -- partitioned, w/filename, p0                                      ok.
+       Cmd: minget -p 0 Partitioned /Message                
+ 52 -- partitioned, w/filename, p1                                      ok.
+       Cmd: minget -p 1 Partitioned /Message                
+ 53 -- partitioned, w/filename, p2                                      ok.
+       Cmd: minget -p 2 Partitioned /Message                
+ 54 -- partitioned, w/filename, p3                                      ok.
+       Cmd: minget -p 3 Partitioned /Message                
+ 55 -- subpart., no filename s0                                         ok.
+       Cmd: minget -p 0 -s 0 HardDisk                       
+ 56 -- subpart., no filename s2                                         ok.
+       Cmd: minget -p 0 -s 2 HardDisk                       
+ 57 -- subpart., w/filename                                         FAILED.
+       Cmd: minget -p 0 -s 2 HardDisk /home/pnico/Message   
+ 58 -- subpart., w/bad filename                                         ok.
+       Cmd: minget -p 0 -s 0 HardDisk /home/pnico/Message   
+ 59 -- unpartitioned, w/filename                                        ok.
+       Cmd: minget TestImage /Hello /dev/stdout             
+ 60 -- partitioned, w/filename, p0                                      ok.
+       Cmd: minget -p 0 Partitioned /Message /dev/stdout    
+ 61 -- partitioned, w/filename, p1                                      ok.
+       Cmd: minget -p 1 Partitioned /Message /dev/stdout    
+ 62 -- partitioned, w/filename, p2                                      ok.
+       Cmd: minget -p 2 Partitioned /Message /dev/stdout    
+ 63 -- partitioned, w/filename, p3                                      ok.
+       Cmd: minget -p 3 Partitioned /Message /dev/stdout    
+ 64 -- subpart., no filename s0                                         ok.
+       Cmd: minget -p 0 -s 0 HardDisk /dev/stdout           
+ 65 -- subpart., no filename s2                                         ok.
+       Cmd: minget -p 0 -s 2 HardDisk /dev/stdout           
+ 66 -- subpart., w/filename                                         FAILED.
+       Cmd: minget -p 0 -s 2 HardDisk /home/pnico/Message /dev/stdout 
+ 67 -- subpart., w/bad filename                                         ok.
+       Cmd: minget -p 0 -s 0 HardDisk /home/pnico/Message /dev/stdout 
+ 68 -- directories                                                      ok.
+       Cmd: minget Files /Files                             
+ 69 -- directories                                                      ok.
+       Cmd: minget Files /DeepPaths/Distraction             
+ 70 -- directories                                                      ok.
+       Cmd: minget Files /DeepPaths/a/b/c/d/e/i/j/k/Files   
+ 71 -- directories                                                  FAILED.
+       Cmd: minget Files /DeepPaths/a/b/c/d/e/i/j/k/Files/Message 
+ 72 -- directories                                                      ok.
+       Cmd: minget Files /Files /dev/stdout                 
+ 73 -- directories                                                      ok.
+       Cmd: minget Files /DeepPaths/Distraction /dev/stdout 
+ 74 -- directories                                                      ok.
+       Cmd: minget Files /DeepPaths/a/b/c/d/e/i/j/k/Files /dev/stdout 
+ 75 -- directories                                                  FAILED.
+       Cmd: minget Files /DeepPaths/a/b/c/d/e/i/j/k/Files/Message /dev/stdout 
+ 76 -- multi-zone directory (file)                                      ok.
+       Cmd: minget BigDirectories LastFile                  
+ 77 -- multi-zone directory (file)                                      ok.
+       Cmd: minget BigDirectories LastFile /dev/stdout      
+ 78 -- indirect directory (file)                                    FAILED.
+       Cmd: minget BigIndirectDirs Level1/Level2/LastFile   
+ 79 -- indirect directory (file)                                    FAILED.
+       Cmd: minget BigIndirectDirs Level1/Level2/LastFile /dev/stdout 
+ 80 -- directories-deleted                                              ok.
+       Cmd: minget Files /Deleted                           
+ 81 -- directories-ok file                                          FAILED.
+       Cmd: minget Files /Deleted/File-10                   
+ 82 -- directories-deleted file                                         ok.
+       Cmd: minget Files /Deleted/File-05                   
+ 83 -- directories-deleted                                              ok.
+       Cmd: minget Files /Deleted /dev/stdout               
+ 84 -- directories-ok file                                          FAILED.
+       Cmd: minget Files /Deleted/File-10 /dev/stdout       
+ 85 -- directories-deleted file                                         ok.
+       Cmd: minget Files /Deleted/File-05 /dev/stdout       
+ 86 -- 1k blocks. dir.                                              FAILED.
+       Cmd: minls SmallBlocks--1k                          
+ 87 -- 1k blocks. file.                                             FAILED.
+       Cmd: minls SmallBlocks--1k DirTwo/FileTwo           
+ 88 -- 16k zones. dir.                                              FAILED.
+       Cmd: minls BigZones-16k                             
+ 89 -- 16k zones. file.                                             FAILED.
+       Cmd: minls BigZones-16k /DirOne/FileTwo             
+ 90 -- 64k zones. dir                                               FAILED.
+       Cmd: minls ReallyBigZones-64k                       
+ 91 -- 64k zones. file                                              FAILED.
+       Cmd: minls ReallyBigZones-64k DirTwo/FileOne        
+ 92 -- 64k zones. longpath                                          FAILED.
+       Cmd: minls ReallyBigZones-64k /./.././../DirTwo/FileOne 
+ 93 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0000_Zones                  
+ 94 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0000_Zone                   
+ 95 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0007_Zones                  
+ 96 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0010_Zones                  
+ 97 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/1032_Zones                  
+ 98 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0000_Zones /dev/stdout      
+ 99 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0000_Zone /dev/stdout       
+100 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0007_Zones /dev/stdout      
+101 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/0010_Zones /dev/stdout      
+102 -- Files size tests                                             FAILED.
+       Cmd: minget Files /Files/1032_Zones /dev/stdout      
+103 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/nohole         /dev/stdout  
+104 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/direct         /dev/stdout  
+105 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/into-indirect  /dev/stdout  
+106 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/whole-indirect /dev/stdout  
+107 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/double         /dev/stdout  
+108 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/nohole                      
+109 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/direct                      
+110 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/into-indirect               
+111 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/whole-indirect              
+112 -- Reading files with holes                                     FAILED.
+       Cmd: minget Files /Holes/double                      
+113 -- minls:  partition table with bad type                            ok.
+       Cmd: minls -p 0 BrokenStuff                         
+114 -- minget: partition table with bad type                            ok.
+       Cmd: minget -p 0 BrokenStuff README /dev/stdout      
+115 -- minls:  superblock with bad magic                                ok.
+       Cmd: minls -p 1 BrokenStuff                         
+116 -- minget: superblock with bad magic                                ok.
+       Cmd: minget -p 1 BrokenStuff README /dev/stdout      
+117 -- minls:  partition table with bad magic                           ok.
+       Cmd: minls -p 2 -s 0 BrokenStuff                    
+118 -- minget: partition table with bad magic                           ok.
+       Cmd: minget -p 2 -s 0 BrokenStuff README /dev/stdout 
+119 -- minls:  trying to traverse a file                            FAILED.
+       Cmd: minls WeirdStuff NotADir/This_file_does_not_exist 
+120 -- minget: trying to traverse a file                            FAILED.
+       Cmd: minget WeirdStuff NotADir/This_file_does_not_exist /dev/stdout 
+121 -- minget: trying to get a symlink                              FAILED.
+       Cmd: minget WeirdStuff SymLink                       
+122 -- minget: trying to get a directory                                ok.
+       Cmd: minget TestImage src /dev/stdout                
+123 -- minget: indirect block vs. zone                              FAILED.
+       Cmd: minget indirectblock tryme /dev/stdout          
+124 -- minls: long file name                                        FAILED.
+       Cmd: minls indirectblock ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBoo 
+125 -- minls: long file name, partial match                             ok.
+       Cmd: minls indirectblock ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBooTooLong 
+   =======================================================================
+Failure. (43/125 passed)
+
+Actual ouput from tests and detailed results are below.
+
+
+
+-----------------
+2) unparitioned, blank:
+     minls /home/pn-cs453/Given/Asgn5/Images/BlankDisk 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 65536, data_offset: 65536
+drwxrwxrwx       128 .
+Cur_pos: 65600, data_offset: 65536
+drwxrwxrwx       128 ..
+Cur_pos: 65664, data_offset: 65536
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 65536, data_offset: 65536
+2a13
+> Cur_pos: 65600, data_offset: 65536
+3a15
+> Cur_pos: 65664, data_offset: 65536
+
+
+-----------------
+3) unpartitioned, files:
+     minls /home/pn-cs453/Given/Asgn5/Images/TestImage 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 65536, data_offset: 65536
+drwxrwxrwx       384 .
+Cur_pos: 65600, data_offset: 65536
+drwxrwxrwx       384 ..
+Cur_pos: 65664, data_offset: 65536
+Cur_pos: 65728, data_offset: 65536
+-rw-r--r--     73991 Other
+Cur_pos: 65792, data_offset: 65536
+drwxr-xr-x      3200 src
+Cur_pos: 65856, data_offset: 65536
+-rw-r--r--        11 Hello
+Cur_pos: 65920, data_offset: 65536
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 65536, data_offset: 65536
+2a13
+> Cur_pos: 65600, data_offset: 65536
+3a15,16
+> Cur_pos: 65664, data_offset: 65536
+> Cur_pos: 65728, data_offset: 65536
+4a18
+> Cur_pos: 65792, data_offset: 65536
+5a20
+> Cur_pos: 65856, data_offset: 65536
+6a22
+> Cur_pos: 65920, data_offset: 65536
+
+
+-----------------
+5) partitioned, part 0:
+     minls -p 0 /home/pn-cs453/Given/Asgn5/Images/Partitioned 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 4
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 47104, data_offset: 47104
+drwxrwxrwx       192 .
+Cur_pos: 47168, data_offset: 47104
+drwxrwxrwx       192 ..
+Cur_pos: 47232, data_offset: 47104
+-rw-r--r--        20 Message
+Cur_pos: 47296, data_offset: 47104
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 4, argc: 4
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 47104, data_offset: 47104
+2a13
+> Cur_pos: 47168, data_offset: 47104
+3a15
+> Cur_pos: 47232, data_offset: 47104
+4a17
+> Cur_pos: 47296, data_offset: 47104
+
+
+-----------------
+6) partitioned, part 1:
+     minls -p 1 /home/pn-cs453/Given/Asgn5/Images/Partitioned 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 4
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 397312, data_offset: 397312
+drwxrwxrwx       192 .
+Cur_pos: 397376, data_offset: 397312
+drwxrwxrwx       192 ..
+Cur_pos: 397440, data_offset: 397312
+-rw-r--r--        20 Message
+Cur_pos: 397504, data_offset: 397312
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 4, argc: 4
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 397312, data_offset: 397312
+2a13
+> Cur_pos: 397376, data_offset: 397312
+3a15
+> Cur_pos: 397440, data_offset: 397312
+4a17
+> Cur_pos: 397504, data_offset: 397312
+
+
+-----------------
+7) partitioned, part 2:
+     minls -p 2 /home/pn-cs453/Given/Asgn5/Images/Partitioned 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 4
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 765952, data_offset: 765952
+drwxrwxrwx       192 .
+Cur_pos: 766016, data_offset: 765952
+drwxrwxrwx       192 ..
+Cur_pos: 766080, data_offset: 765952
+-rw-r--r--        20 Message
+Cur_pos: 766144, data_offset: 765952
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 4, argc: 4
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 765952, data_offset: 765952
+2a13
+> Cur_pos: 766016, data_offset: 765952
+3a15
+> Cur_pos: 766080, data_offset: 765952
+4a17
+> Cur_pos: 766144, data_offset: 765952
+
+
+-----------------
+8) partitioned, part 3:
+     minls -p 3 /home/pn-cs453/Given/Asgn5/Images/Partitioned 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 4
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 1134592, data_offset: 1134592
+drwxrwxrwx       192 .
+Cur_pos: 1134656, data_offset: 1134592
+drwxrwxrwx       192 ..
+Cur_pos: 1134720, data_offset: 1134592
+-rw-r--r--        20 Message
+Cur_pos: 1134784, data_offset: 1134592
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 4, argc: 4
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 1134592, data_offset: 1134592
+2a13
+> Cur_pos: 1134656, data_offset: 1134592
+3a15
+> Cur_pos: 1134720, data_offset: 1134592
+4a17
+> Cur_pos: 1134784, data_offset: 1134592
+
+
+-----------------
+12) subpart., good sub:
+     minls -p 0 -s 0 /home/pn-cs453/Given/Asgn5/Images/HardDisk 
+-----------------
+Test program output:
+Inside process args
+optind: 6, argc: 6
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 74752, data_offset: 74752
+drwxrwxrwx       640 .
+Cur_pos: 74816, data_offset: 74752
+drwxrwxrwx       640 ..
+Cur_pos: 74880, data_offset: 74752
+drwxr-xr-x       128 usr
+Cur_pos: 74944, data_offset: 74752
+drwxr-xr-x       128 tmp
+Cur_pos: 75008, data_offset: 74752
+drwxr-xr-x      2624 bin
+Cur_pos: 75072, data_offset: 74752
+drwxr-xr-x      1472 etc
+Cur_pos: 75136, data_offset: 74752
+drwxr-xr-x       768 sbin
+Cur_pos: 75200, data_offset: 74752
+drwxr-xr-x     14144 dev
+Cur_pos: 75264, data_offset: 74752
+drwxr-xr-x       192 lib
+Cur_pos: 75328, data_offset: 74752
+drwxr-xr-x       256 boot
+Cur_pos: 75392, data_offset: 74752
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 6, argc: 6
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 74752, data_offset: 74752
+2a13
+> Cur_pos: 74816, data_offset: 74752
+3a15
+> Cur_pos: 74880, data_offset: 74752
+4a17
+> Cur_pos: 74944, data_offset: 74752
+5a19
+> Cur_pos: 75008, data_offset: 74752
+6a21
+> Cur_pos: 75072, data_offset: 74752
+7a23
+> Cur_pos: 75136, data_offset: 74752
+8a25
+> Cur_pos: 75200, data_offset: 74752
+9a27
+> Cur_pos: 75264, data_offset: 74752
+10a29
+> Cur_pos: 75328, data_offset: 74752
+11a31
+> Cur_pos: 75392, data_offset: 74752
+
+
+-----------------
+14) unpartitioned, w/filename:
+     minls /home/pn-cs453/Given/Asgn5/Images/TestImage /Hello 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Hello
+Reading superblock
+Print file info called
+Path in pfi: Hello
+Permissions: -1194175088
+-rw-r--r--        11 Hello
+Diffs: ( < Reference > Testfile ):
+0a1,8
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Hello
+> Reading superblock
+> Print file info called
+> Path in pfi: Hello
+> Permissions: -1194175088
+
+
+-----------------
+15) partitioned, w/filename, p0:
+     minls -p 0 /home/pn-cs453/Given/Asgn5/Images/Partitioned /Message 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 5
+Setting path
+Path: /Message
+Reading superblock
+Print file info called
+Path in pfi: Message
+Permissions: -179711376
+-rw-r--r--        20 Message
+Diffs: ( < Reference > Testfile ):
+0a1,8
+> Inside process args
+> optind: 4, argc: 5
+> Setting path
+> Path: /Message
+> Reading superblock
+> Print file info called
+> Path in pfi: Message
+> Permissions: -179711376
+
+
+-----------------
+16) partitioned, w/filename, p1:
+     minls -p 1 /home/pn-cs453/Given/Asgn5/Images/Partitioned /Message 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 5
+Setting path
+Path: /Message
+Reading superblock
+Print file info called
+Path in pfi: Message
+Permissions: 1789639504
+-rw-r--r--        20 Message
+Diffs: ( < Reference > Testfile ):
+0a1,8
+> Inside process args
+> optind: 4, argc: 5
+> Setting path
+> Path: /Message
+> Reading superblock
+> Print file info called
+> Path in pfi: Message
+> Permissions: 1789639504
+
+
+-----------------
+17) partitioned, w/filename, p2:
+     minls -p 2 /home/pn-cs453/Given/Asgn5/Images/Partitioned /Message 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 5
+Setting path
+Path: /Message
+Reading superblock
+Print file info called
+Path in pfi: Message
+Permissions: 989097808
+-rw-r--r--        20 Message
+Diffs: ( < Reference > Testfile ):
+0a1,8
+> Inside process args
+> optind: 4, argc: 5
+> Setting path
+> Path: /Message
+> Reading superblock
+> Print file info called
+> Path in pfi: Message
+> Permissions: 989097808
+
+
+-----------------
+18) partitioned, w/filename, p3:
+     minls -p 3 /home/pn-cs453/Given/Asgn5/Images/Partitioned /Message 
+-----------------
+Test program output:
+Inside process args
+optind: 4, argc: 5
+Setting path
+Path: /Message
+Reading superblock
+Print file info called
+Path in pfi: Message
+Permissions: -16381088
+-rw-r--r--        20 Message
+Diffs: ( < Reference > Testfile ):
+0a1,8
+> Inside process args
+> optind: 4, argc: 5
+> Setting path
+> Path: /Message
+> Reading superblock
+> Print file info called
+> Path in pfi: Message
+> Permissions: -16381088
+
+
+-----------------
+19) subpart., no filename s0:
+     minls -p 0 -s 0 /home/pn-cs453/Given/Asgn5/Images/HardDisk 
+-----------------
+Test program output:
+Inside process args
+optind: 6, argc: 6
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 74752, data_offset: 74752
+drwxrwxrwx       640 .
+Cur_pos: 74816, data_offset: 74752
+drwxrwxrwx       640 ..
+Cur_pos: 74880, data_offset: 74752
+drwxr-xr-x       128 usr
+Cur_pos: 74944, data_offset: 74752
+drwxr-xr-x       128 tmp
+Cur_pos: 75008, data_offset: 74752
+drwxr-xr-x      2624 bin
+Cur_pos: 75072, data_offset: 74752
+drwxr-xr-x      1472 etc
+Cur_pos: 75136, data_offset: 74752
+drwxr-xr-x       768 sbin
+Cur_pos: 75200, data_offset: 74752
+drwxr-xr-x     14144 dev
+Cur_pos: 75264, data_offset: 74752
+drwxr-xr-x       192 lib
+Cur_pos: 75328, data_offset: 74752
+drwxr-xr-x       256 boot
+Cur_pos: 75392, data_offset: 74752
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 6, argc: 6
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 74752, data_offset: 74752
+2a13
+> Cur_pos: 74816, data_offset: 74752
+3a15
+> Cur_pos: 74880, data_offset: 74752
+4a17
+> Cur_pos: 74944, data_offset: 74752
+5a19
+> Cur_pos: 75008, data_offset: 74752
+6a21
+> Cur_pos: 75072, data_offset: 74752
+7a23
+> Cur_pos: 75136, data_offset: 74752
+8a25
+> Cur_pos: 75200, data_offset: 74752
+9a27
+> Cur_pos: 75264, data_offset: 74752
+10a29
+> Cur_pos: 75328, data_offset: 74752
+11a31
+> Cur_pos: 75392, data_offset: 74752
+
+
+-----------------
+20) subpart., no filename s2:
+     minls -p 0 -s 2 /home/pn-cs453/Given/Asgn5/Images/HardDisk 
+-----------------
+Test program output:
+Inside process args
+optind: 6, argc: 6
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 64
+Cur_pos: 2245632, data_offset: 2245632
+drwxrwxrwx      1280 .
+Cur_pos: 2245696, data_offset: 2245632
+drwxrwxrwx      1280 ..
+Cur_pos: 2245760, data_offset: 2245632
+drwxr-xr-x       512 adm
+Cur_pos: 2245824, data_offset: 2245632
+drwxr-xr-x       512 ast
+Cur_pos: 2245888, data_offset: 2245632
+drwxr-xr-x     20800 bin
+Cur_pos: 2245952, data_offset: 2245632
+drwxr-xr-x       384 etc
+Cur_pos: 2246016, data_offset: 2245632
+drwxr-xr-x       640 gnu
+Cur_pos: 2246080, data_offset: 2245632
+drwxr-xr-x      3392 include
+Cur_pos: 2246144, data_offset: 2245632
+drwxr-xr-x      2112 lib
+Cur_pos: 2246208, data_offset: 2245632
+drwxr-xr-x       704 log
+Cur_pos: 2246272, data_offset: 2245632
+drwxr-xr-x       896 man
+Cur_pos: 2246336, data_offset: 2245632
+drwxr-xr-x       384 mdec
+Cur_pos: 2246400, data_offset: 2245632
+drwx------       128 preserve
+Cur_pos: 2246464, data_offset: 2245632
+drwxr-xr-x       192 run
+Cur_pos: 2246528, data_offset: 2245632
+drwxr-xr-x      1088 sbin
+Cur_pos: 2246592, data_offset: 2245632
+drwxr-xr-x       384 spool
+Cur_pos: 2246656, data_offset: 2245632
+drwxrwxrwx       128 tmp
+Cur_pos: 2246720, data_offset: 2245632
+drwxr-xr-x       896 src
+Cur_pos: 2246784, data_offset: 2245632
+drwxr-xr-x       192 home
+Cur_pos: 2246848, data_offset: 2245632
+Cur_pos: 2246912, data_offset: 2245632
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 6, argc: 6
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 2245632, data_offset: 2245632
+2a13
+> Cur_pos: 2245696, data_offset: 2245632
+3a15
+> Cur_pos: 2245760, data_offset: 2245632
+4a17
+> Cur_pos: 2245824, data_offset: 2245632
+5a19
+> Cur_pos: 2245888, data_offset: 2245632
+6a21
+> Cur_pos: 2245952, data_offset: 2245632
+7a23
+> Cur_pos: 2246016, data_offset: 2245632
+8a25
+> Cur_pos: 2246080, data_offset: 2245632
+9a27
+> Cur_pos: 2246144, data_offset: 2245632
+10a29
+> Cur_pos: 2246208, data_offset: 2245632
+11a31
+> Cur_pos: 2246272, data_offset: 2245632
+12a33
+> Cur_pos: 2246336, data_offset: 2245632
+13a35
+> Cur_pos: 2246400, data_offset: 2245632
+14a37
+> Cur_pos: 2246464, data_offset: 2245632
+15a39
+> Cur_pos: 2246528, data_offset: 2245632
+16a41
+> Cur_pos: 2246592, data_offset: 2245632
+17a43
+> Cur_pos: 2246656, data_offset: 2245632
+18a45
+> Cur_pos: 2246720, data_offset: 2245632
+19a47
+> Cur_pos: 2246784, data_offset: 2245632
+20a49,50
+> Cur_pos: 2246848, data_offset: 2245632
+> Cur_pos: 2246912, data_offset: 2245632
+
+
+-----------------
+21) subpart., w/filename:
+     minls -p 0 -s 2 /home/pn-cs453/Given/Asgn5/Images/HardDisk /home/pnico/Message 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Inside process args
+optind: 6, argc: 7
+Setting path
+Path: /home/pnico/Message
+Reading superblock
+Submitted program's stderr:
+Path entry Message not found
+Failed to find path: home/Message
+
+
+-----------------
+23) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Files 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Files
+Reading superblock
+Print file info called
+Path in pfi: Files
+Files:
+Zone count 1
+entreis in zone 64
+Cur_pos: 344064, data_offset: 344064
+drwxr-xr-x       448 .
+Cur_pos: 344128, data_offset: 344064
+drwxrwxrwx       448 ..
+Cur_pos: 344192, data_offset: 344064
+-rw-r--r--         0 0000_Zones
+Cur_pos: 344256, data_offset: 344064
+-rw-r--r--      4096 0000_Zone
+Cur_pos: 344320, data_offset: 344064
+-rw-r--r--     28672 0007_Zones
+Cur_pos: 344384, data_offset: 344064
+-rw-r--r--     40960 0010_Zones
+Cur_pos: 344448, data_offset: 344064
+-rw-r--r--   4227072 1032_Zones
+Cur_pos: 344512, data_offset: 344064
+Diffs: ( < Reference > Testfile ):
+1c1,11
+< /Files:
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Files
+> Reading superblock
+> Print file info called
+> Path in pfi: Files
+> Files:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 344064, data_offset: 344064
+2a13
+> Cur_pos: 344128, data_offset: 344064
+3a15
+> Cur_pos: 344192, data_offset: 344064
+4a17
+> Cur_pos: 344256, data_offset: 344064
+5a19
+> Cur_pos: 344320, data_offset: 344064
+6a21
+> Cur_pos: 344384, data_offset: 344064
+7a23
+> Cur_pos: 344448, data_offset: 344064
+8a25
+> Cur_pos: 344512, data_offset: 344064
+
+
+-----------------
+24) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Files/0000_Zones 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Files/0000_Zones
+Reading superblock
+Print file info called
+Path in pfi: Files
+Files:
+Zone count 1
+entreis in zone 64
+Cur_pos: 344064, data_offset: 344064
+drwxr-xr-x       448 .
+Cur_pos: 344128, data_offset: 344064
+drwxrwxrwx       448 ..
+Cur_pos: 344192, data_offset: 344064
+-rw-r--r--         0 0000_Zones
+Cur_pos: 344256, data_offset: 344064
+-rw-r--r--      4096 0000_Zone
+Cur_pos: 344320, data_offset: 344064
+-rw-r--r--     28672 0007_Zones
+Cur_pos: 344384, data_offset: 344064
+-rw-r--r--     40960 0010_Zones
+Cur_pos: 344448, data_offset: 344064
+-rw-r--r--   4227072 1032_Zones
+Cur_pos: 344512, data_offset: 344064
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rw-r--r--         0 Files/0000_Zones
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Files/0000_Zones
+> Reading superblock
+> Print file info called
+> Path in pfi: Files
+> Files:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 344064, data_offset: 344064
+> drwxr-xr-x       448 .
+> Cur_pos: 344128, data_offset: 344064
+> drwxrwxrwx       448 ..
+> Cur_pos: 344192, data_offset: 344064
+> -rw-r--r--         0 0000_Zones
+> Cur_pos: 344256, data_offset: 344064
+> -rw-r--r--      4096 0000_Zone
+> Cur_pos: 344320, data_offset: 344064
+> -rw-r--r--     28672 0007_Zones
+> Cur_pos: 344384, data_offset: 344064
+> -rw-r--r--     40960 0010_Zones
+> Cur_pos: 344448, data_offset: 344064
+> -rw-r--r--   4227072 1032_Zones
+> Cur_pos: 344512, data_offset: 344064
+
+
+-----------------
+25) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Files/0000_Zone 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Files/0000_Zone
+Reading superblock
+Print file info called
+Path in pfi: Files
+Files:
+Zone count 1
+entreis in zone 64
+Cur_pos: 344064, data_offset: 344064
+drwxr-xr-x       448 .
+Cur_pos: 344128, data_offset: 344064
+drwxrwxrwx       448 ..
+Cur_pos: 344192, data_offset: 344064
+-rw-r--r--         0 0000_Zones
+Cur_pos: 344256, data_offset: 344064
+-rw-r--r--      4096 0000_Zone
+Cur_pos: 344320, data_offset: 344064
+-rw-r--r--     28672 0007_Zones
+Cur_pos: 344384, data_offset: 344064
+-rw-r--r--     40960 0010_Zones
+Cur_pos: 344448, data_offset: 344064
+-rw-r--r--   4227072 1032_Zones
+Cur_pos: 344512, data_offset: 344064
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rw-r--r--      4096 Files/0000_Zone
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Files/0000_Zone
+> Reading superblock
+> Print file info called
+> Path in pfi: Files
+> Files:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 344064, data_offset: 344064
+> drwxr-xr-x       448 .
+> Cur_pos: 344128, data_offset: 344064
+> drwxrwxrwx       448 ..
+> Cur_pos: 344192, data_offset: 344064
+> -rw-r--r--         0 0000_Zones
+> Cur_pos: 344256, data_offset: 344064
+> -rw-r--r--      4096 0000_Zone
+> Cur_pos: 344320, data_offset: 344064
+> -rw-r--r--     28672 0007_Zones
+> Cur_pos: 344384, data_offset: 344064
+> -rw-r--r--     40960 0010_Zones
+> Cur_pos: 344448, data_offset: 344064
+> -rw-r--r--   4227072 1032_Zones
+> Cur_pos: 344512, data_offset: 344064
+
+
+-----------------
+26) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Files/0007_Zones 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Files/0007_Zones
+Reading superblock
+Print file info called
+Path in pfi: Files
+Files:
+Zone count 1
+entreis in zone 64
+Cur_pos: 344064, data_offset: 344064
+drwxr-xr-x       448 .
+Cur_pos: 344128, data_offset: 344064
+drwxrwxrwx       448 ..
+Cur_pos: 344192, data_offset: 344064
+-rw-r--r--         0 0000_Zones
+Cur_pos: 344256, data_offset: 344064
+-rw-r--r--      4096 0000_Zone
+Cur_pos: 344320, data_offset: 344064
+-rw-r--r--     28672 0007_Zones
+Cur_pos: 344384, data_offset: 344064
+-rw-r--r--     40960 0010_Zones
+Cur_pos: 344448, data_offset: 344064
+-rw-r--r--   4227072 1032_Zones
+Cur_pos: 344512, data_offset: 344064
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rw-r--r--     28672 Files/0007_Zones
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Files/0007_Zones
+> Reading superblock
+> Print file info called
+> Path in pfi: Files
+> Files:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 344064, data_offset: 344064
+> drwxr-xr-x       448 .
+> Cur_pos: 344128, data_offset: 344064
+> drwxrwxrwx       448 ..
+> Cur_pos: 344192, data_offset: 344064
+> -rw-r--r--         0 0000_Zones
+> Cur_pos: 344256, data_offset: 344064
+> -rw-r--r--      4096 0000_Zone
+> Cur_pos: 344320, data_offset: 344064
+> -rw-r--r--     28672 0007_Zones
+> Cur_pos: 344384, data_offset: 344064
+> -rw-r--r--     40960 0010_Zones
+> Cur_pos: 344448, data_offset: 344064
+> -rw-r--r--   4227072 1032_Zones
+> Cur_pos: 344512, data_offset: 344064
+
+
+-----------------
+27) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Files/0010_Zones 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Files/0010_Zones
+Reading superblock
+Print file info called
+Path in pfi: Files
+Files:
+Zone count 1
+entreis in zone 64
+Cur_pos: 344064, data_offset: 344064
+drwxr-xr-x       448 .
+Cur_pos: 344128, data_offset: 344064
+drwxrwxrwx       448 ..
+Cur_pos: 344192, data_offset: 344064
+-rw-r--r--         0 0000_Zones
+Cur_pos: 344256, data_offset: 344064
+-rw-r--r--      4096 0000_Zone
+Cur_pos: 344320, data_offset: 344064
+-rw-r--r--     28672 0007_Zones
+Cur_pos: 344384, data_offset: 344064
+-rw-r--r--     40960 0010_Zones
+Cur_pos: 344448, data_offset: 344064
+-rw-r--r--   4227072 1032_Zones
+Cur_pos: 344512, data_offset: 344064
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rw-r--r--     40960 Files/0010_Zones
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Files/0010_Zones
+> Reading superblock
+> Print file info called
+> Path in pfi: Files
+> Files:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 344064, data_offset: 344064
+> drwxr-xr-x       448 .
+> Cur_pos: 344128, data_offset: 344064
+> drwxrwxrwx       448 ..
+> Cur_pos: 344192, data_offset: 344064
+> -rw-r--r--         0 0000_Zones
+> Cur_pos: 344256, data_offset: 344064
+> -rw-r--r--      4096 0000_Zone
+> Cur_pos: 344320, data_offset: 344064
+> -rw-r--r--     28672 0007_Zones
+> Cur_pos: 344384, data_offset: 344064
+> -rw-r--r--     40960 0010_Zones
+> Cur_pos: 344448, data_offset: 344064
+> -rw-r--r--   4227072 1032_Zones
+> Cur_pos: 344512, data_offset: 344064
+
+
+-----------------
+28) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Files/1032_Zones 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Files/1032_Zones
+Reading superblock
+Print file info called
+Path in pfi: Files
+Files:
+Zone count 1
+entreis in zone 64
+Cur_pos: 344064, data_offset: 344064
+drwxr-xr-x       448 .
+Cur_pos: 344128, data_offset: 344064
+drwxrwxrwx       448 ..
+Cur_pos: 344192, data_offset: 344064
+-rw-r--r--         0 0000_Zones
+Cur_pos: 344256, data_offset: 344064
+-rw-r--r--      4096 0000_Zone
+Cur_pos: 344320, data_offset: 344064
+-rw-r--r--     28672 0007_Zones
+Cur_pos: 344384, data_offset: 344064
+-rw-r--r--     40960 0010_Zones
+Cur_pos: 344448, data_offset: 344064
+-rw-r--r--   4227072 1032_Zones
+Cur_pos: 344512, data_offset: 344064
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rw-r--r--   4227072 Files/1032_Zones
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Files/1032_Zones
+> Reading superblock
+> Print file info called
+> Path in pfi: Files
+> Files:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 344064, data_offset: 344064
+> drwxr-xr-x       448 .
+> Cur_pos: 344128, data_offset: 344064
+> drwxrwxrwx       448 ..
+> Cur_pos: 344192, data_offset: 344064
+> -rw-r--r--         0 0000_Zones
+> Cur_pos: 344256, data_offset: 344064
+> -rw-r--r--      4096 0000_Zone
+> Cur_pos: 344320, data_offset: 344064
+> -rw-r--r--     28672 0007_Zones
+> Cur_pos: 344384, data_offset: 344064
+> -rw-r--r--     40960 0010_Zones
+> Cur_pos: 344448, data_offset: 344064
+> -rw-r--r--   4227072 1032_Zones
+> Cur_pos: 344512, data_offset: 344064
+
+
+-----------------
+29) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /DeepPaths/a/b/c/d/e/i/j/k/Files 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /DeepPaths/a/b/c/d/e/i/j/k/Files
+Reading superblock
+Submitted program's stderr:
+Path entry b not found
+Failed to find path: DeepPaths/b/d/i/k
+
+
+-----------------
+30) directories:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /DeepPaths/a/b/c/d/e/i/j/k/Files/Message 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /DeepPaths/a/b/c/d/e/i/j/k/Files/Message
+Reading superblock
+Submitted program's stderr:
+Path entry b not found
+Failed to find path: DeepPaths/b/d/i/k/Message
+
+
+-----------------
+31) multi-zone directory:
+     minls /home/pn-cs453/Given/Asgn5/Images/BigDirectories 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 6
+entreis in zone 64
+Cur_pos: 65536, data_offset: 65536
+drwxrwxrwx     21824 .
+Cur_pos: 65600, data_offset: 65536
+drwxrwxrwx     21824 ..
+Cur_pos: 65664, data_offset: 65536
+-rwxr--r--       190 doit
+Cur_pos: 65728, data_offset: 65536
+drwxr-xr-x       128 level1-000
+Cur_pos: 65792, data_offset: 65536
+drwxr-xr-x       128 level1-001
+Cur_pos: 65856, data_offset: 65536
+drwxr-xr-x       128 level1-002
+Cur_pos: 65920, data_offset: 65536
+drwxr-xr-x       128 level1-003
+Cur_pos: 65984, data_offset: 65536
+drwxr-xr-x       128 level1-004
+Cur_pos: 66048, data_offset: 65536
+drwxr-xr-x       128 level1-005
+Cur_pos: 66112, data_offset: 65536
+drwxr-xr-x       128 level1-006
+Cur_pos: 66176, data_offset: 65536
+drwxr-xr-x       128 level1-007
+Cur_pos: 66240, data_offset: 65536
+drwxr-xr-x       128 level1-008
+Cur_pos: 66304, data_offset: 65536
+drwxr-xr-x       128 level1-009
+Cur_pos: 66368, data_offset: 65536
+drwxr-xr-x       128 level1-010
+Cur_pos: 66432, data_offset: 65536
+drwxr-xr-x       128 level1-011
+Cur_pos: 66496, data_offset: 65536
+drwxr-xr-x       128 level1-012
+Cur_pos: 66560, data_offset: 65536
+drwxr-xr-x       128 level1-013
+Cur_pos: 66624, data_offset: 65536
+drwxr-xr-x       128 level1-014
+Cur_pos: 66688, data_offset: 65536
+drwxr-xr-x       128 level1-015
+Cur_pos: 66752, data_offset: 65536
+drwxr-xr-x       128 level1-016
+Cur_pos: 66816, data_offset: 65536
+drwxr-xr-x       128 level1-017
+Cur_pos: 66880, data_offset: 65536
+drwxr-xr-x       128 level1-018
+Cur_pos: 66944, data_offset: 65536
+drwxr-xr-x       128 level1-019
+Cur_pos: 67008, data_offset: 65536
+drwxr-xr-x       128 level1-020
+Cur_pos: 67072, data_offset: 65536
+drwxr-xr-x       128 level1-021
+Cur_pos: 67136, data_offset: 65536
+drwxr-xr-x       128 level1-022
+Cur_pos: 67200, data_offset: 65536
+drwxr-xr-x       128 level1-023
+Cur_pos: 67264, data_offset: 65536
+drwxr-xr-x       128 level1-024
+Cur_pos: 67328, data_offset: 65536
+drwxr-xr-x       128 level1-025
+Cur_pos: 67392, data_offset: 65536
+drwxr-xr-x       128 level1-026
+Cur_pos: 67456, data_offset: 65536
+drwxr-xr-x       128 level1-027
+Cur_pos: 67520, data_offset: 65536
+drwxr-xr-x       128 level1-028
+Cur_pos: 67584, data_offset: 65536
+drwxr-xr-x       128 level1-029
+Cur_pos: 67648, data_offset: 65536
+drwxr-xr-x       128 level1-030
+Cur_pos: 67712, data_offset: 65536
+drwxr-xr-x       128 level1-031
+Cur_pos: 67776, data_offset: 65536
+drwxr-xr-x       128 level1-032
+Cur_pos: 67840, data_offset: 65536
+drwxr-xr-x       128 level1-033
+Cur_pos: 67904, data_offset: 65536
+drwxr-xr-x       128 level1-034
+Cur_pos: 67968, data_offset: 65536
+drwxr-xr-x       128 level1-035
+Cur_pos: 68032, data_offset: 65536
+drwxr-xr-x       128 level1-036
+Cur_pos: 68096, data_offset: 65536
+drwxr-xr-x       128 level1-037
+Cur_pos: 68160, data_offset: 65536
+drwxr-xr-x       128 level1-038
+Cur_pos: 68224, data_offset: 65536
+drwxr-xr-x       128 level1-039
+Cur_pos: 68288, data_offset: 65536
+drwxr-xr-x       128 level1-040
+Cur_pos: 68352, data_offset: 65536
+drwxr-xr-x       128 level1-041
+Cur_pos: 68416, data_offset: 65536
+drwxr-xr-x       128 level1-042
+Cur_pos: 68480, data_offset: 65536
+drwxr-xr-x       128 level1-043
+Cur_pos: 68544, data_offset: 65536
+drwxr-xr-x       128 level1-044
+Cur_pos: 68608, data_offset: 65536
+drwxr-xr-x       128 level1-045
+Cur_pos: 68672, data_offset: 65536
+drwxr-xr-x       128 level1-046
+Cur_pos: 68736, data_offset: 65536
+drwxr-xr-x       128 level1-047
+Cur_pos: 68800, data_offset: 65536
+drwxr-xr-x       128 level1-048
+Cur_pos: 68864, data_offset: 65536
+drwxr-xr-x       128 level1-049
+Cur_pos: 68928, data_offset: 65536
+drwxr-xr-x       128 level1-050
+Cur_pos: 68992, data_offset: 65536
+drwxr-xr-x       128 level1-051
+Cur_pos: 69056, data_offset: 65536
+drwxr-xr-x       128 level1-052
+Cur_pos: 69120, data_offset: 65536
+drwxr-xr-x       128 level1-053
+Cur_pos: 69184, data_offset: 65536
+drwxr-xr-x       128 level1-054
+Cur_pos: 69248, data_offset: 65536
+drwxr-xr-x       128 level1-055
+Cur_pos: 69312, data_offset: 65536
+drwxr-xr-x       128 level1-056
+Cur_pos: 69376, data_offset: 65536
+drwxr-xr-x       128 level1-057
+Cur_pos: 69440, data_offset: 65536
+drwxr-xr-x       128 level1-058
+Cur_pos: 69504, data_offset: 65536
+drwxr-xr-x       128 level1-059
+Cur_pos: 69568, data_offset: 65536
+drwxr-xr-x       128 level1-060
+entreis in zone 64
+Cur_pos: 323584, data_offset: 323584
+drwxr-xr-x       128 level1-061
+Cur_pos: 323648, data_offset: 323584
+drwxr-xr-x       128 level1-062
+Cur_pos: 323712, data_offset: 323584
+drwxr-xr-x       128 level1-063
+Cur_pos: 323776, data_offset: 323584
+drwxr-xr-x       128 level1-064
+Cur_pos: 323840, data_offset: 323584
+drwxr-xr-x       128 level1-065
+Cur_pos: 323904, data_offset: 323584
+drwxr-xr-x       128 level1-066
+Cur_pos: 323968, data_offset: 323584
+drwxr-xr-x       128 level1-067
+Cur_pos: 324032, data_offset: 323584
+drwxr-xr-x       128 level1-068
+Cur_pos: 324096, data_offset: 323584
+drwxr-xr-x       128 level1-069
+Cur_pos: 324160, data_offset: 323584
+drwxr-xr-x       128 level1-070
+Cur_pos: 324224, data_offset: 323584
+drwxr-xr-x       128 level1-071
+Cur_pos: 324288, data_offset: 323584
+drwxr-xr-x       128 level1-072
+Cur_pos: 324352, data_offset: 323584
+drwxr-xr-x       128 level1-073
+Cur_pos: 324416, data_offset: 323584
+drwxr-xr-x       128 level1-074
+Cur_pos: 324480, data_offset: 323584
+drwxr-xr-x       128 level1-075
+Cur_pos: 324544, data_offset: 323584
+drwxr-xr-x       128 level1-076
+Cur_pos: 324608, data_offset: 323584
+drwxr-xr-x       128 level1-077
+Cur_pos: 324672, data_offset: 323584
+drwxr-xr-x       128 level1-078
+Cur_pos: 324736, data_offset: 323584
+drwxr-xr-x       128 level1-079
+Cur_pos: 324800, data_offset: 323584
+drwxr-xr-x       128 level1-080
+Cur_pos: 324864, data_offset: 323584
+drwxr-xr-x       128 level1-081
+Cur_pos: 324928, data_offset: 323584
+drwxr-xr-x       128 level1-082
+Cur_pos: 324992, data_offset: 323584
+drwxr-xr-x       128 level1-083
+Cur_pos: 325056, data_offset: 323584
+drwxr-xr-x       128 level1-084
+Cur_pos: 325120, data_offset: 323584
+drwxr-xr-x       128 level1-085
+Cur_pos: 325184, data_offset: 323584
+drwxr-xr-x       128 level1-086
+Cur_pos: 325248, data_offset: 323584
+drwxr-xr-x       128 level1-087
+Cur_pos: 325312, data_offset: 323584
+drwxr-xr-x       128 level1-088
+Cur_pos: 325376, data_offset: 323584
+drwxr-xr-x       128 level1-089
+Cur_pos: 325440, data_offset: 323584
+drwxr-xr-x       128 level1-090
+Cur_pos: 325504, data_offset: 323584
+drwxr-xr-x       128 level1-091
+Cur_pos: 325568, data_offset: 323584
+drwxr-xr-x       128 level1-092
+Cur_pos: 325632, data_offset: 323584
+drwxr-xr-x       128 level1-093
+Cur_pos: 325696, data_offset: 323584
+drwxr-xr-x       128 level1-094
+Cur_pos: 325760, data_offset: 323584
+drwxr-xr-x       128 level1-095
+Cur_pos: 325824, data_offset: 323584
+drwxr-xr-x       128 level1-096
+Cur_pos: 325888, data_offset: 323584
+drwxr-xr-x       128 level1-097
+Cur_pos: 325952, data_offset: 323584
+drwxr-xr-x       128 level1-098
+Cur_pos: 326016, data_offset: 323584
+drwxr-xr-x       128 level1-099
+Cur_pos: 326080, data_offset: 323584
+drwxr-xr-x       128 level1-100
+Cur_pos: 326144, data_offset: 323584
+drwxr-xr-x       128 level1-101
+Cur_pos: 326208, data_offset: 323584
+drwxr-xr-x       128 level1-102
+Cur_pos: 326272, data_offset: 323584
+drwxr-xr-x       128 level1-103
+Cur_pos: 326336, data_offset: 323584
+drwxr-xr-x       128 level1-104
+Cur_pos: 326400, data_offset: 323584
+drwxr-xr-x       128 level1-105
+Cur_pos: 326464, data_offset: 323584
+drwxr-xr-x       128 level1-106
+Cur_pos: 326528, data_offset: 323584
+drwxr-xr-x       128 level1-107
+Cur_pos: 326592, data_offset: 323584
+drwxr-xr-x       128 level1-108
+Cur_pos: 326656, data_offset: 323584
+drwxr-xr-x       128 level1-109
+Cur_pos: 326720, data_offset: 323584
+drwxr-xr-x       128 level1-110
+Cur_pos: 326784, data_offset: 323584
+drwxr-xr-x       128 level1-111
+Cur_pos: 326848, data_offset: 323584
+drwxr-xr-x       128 level1-112
+Cur_pos: 326912, data_offset: 323584
+drwxr-xr-x       128 level1-113
+Cur_pos: 326976, data_offset: 323584
+drwxr-xr-x       128 level1-114
+Cur_pos: 327040, data_offset: 323584
+drwxr-xr-x       128 level1-115
+Cur_pos: 327104, data_offset: 323584
+drwxr-xr-x       128 level1-116
+Cur_pos: 327168, data_offset: 323584
+drwxr-xr-x       128 level1-117
+Cur_pos: 327232, data_offset: 323584
+drwxr-xr-x       128 level1-118
+Cur_pos: 327296, data_offset: 323584
+drwxr-xr-x       128 level1-119
+Cur_pos: 327360, data_offset: 323584
+drwxr-xr-x       128 level1-120
+Cur_pos: 327424, data_offset: 323584
+drwxr-xr-x       128 level1-121
+Cur_pos: 327488, data_offset: 323584
+drwxr-xr-x       128 level1-122
+Cur_pos: 327552, data_offset: 323584
+drwxr-xr-x       128 level1-123
+Cur_pos: 327616, data_offset: 323584
+drwxr-xr-x       128 level1-124
+entreis in zone 64
+Cur_pos: 589824, data_offset: 589824
+drwxr-xr-x       128 level1-125
+Cur_pos: 589888, data_offset: 589824
+drwxr-xr-x       128 level1-126
+Cur_pos: 589952, data_offset: 589824
+drwxr-xr-x       128 level1-127
+Cur_pos: 590016, data_offset: 589824
+drwxr-xr-x       128 level1-128
+Cur_pos: 590080, data_offset: 589824
+drwxr-xr-x       128 level1-129
+Cur_pos: 590144, data_offset: 589824
+drwxr-xr-x       128 level1-130
+Cur_pos: 590208, data_offset: 589824
+drwxr-xr-x       128 level1-131
+Cur_pos: 590272, data_offset: 589824
+drwxr-xr-x       128 level1-132
+Cur_pos: 590336, data_offset: 589824
+drwxr-xr-x       128 level1-133
+Cur_pos: 590400, data_offset: 589824
+drwxr-xr-x       128 level1-134
+Cur_pos: 590464, data_offset: 589824
+drwxr-xr-x       128 level1-135
+Cur_pos: 590528, data_offset: 589824
+drwxr-xr-x       128 level1-136
+Cur_pos: 590592, data_offset: 589824
+drwxr-xr-x       128 level1-137
+Cur_pos: 590656, data_offset: 589824
+drwxr-xr-x       128 level1-138
+Cur_pos: 590720, data_offset: 589824
+drwxr-xr-x       128 level1-139
+Cur_pos: 590784, data_offset: 589824
+drwxr-xr-x       128 level1-140
+Cur_pos: 590848, data_offset: 589824
+drwxr-xr-x       128 level1-141
+Cur_pos: 590912, data_offset: 589824
+drwxr-xr-x       128 level1-142
+Cur_pos: 590976, data_offset: 589824
+drwxr-xr-x       128 level1-143
+Cur_pos: 591040, data_offset: 589824
+drwxr-xr-x       128 level1-144
+Cur_pos: 591104, data_offset: 589824
+drwxr-xr-x       128 level1-145
+Cur_pos: 591168, data_offset: 589824
+drwxr-xr-x       128 level1-146
+Cur_pos: 591232, data_offset: 589824
+drwxr-xr-x       128 level1-147
+Cur_pos: 591296, data_offset: 589824
+drwxr-xr-x       128 level1-148
+Cur_pos: 591360, data_offset: 589824
+drwxr-xr-x       128 level1-149
+Cur_pos: 591424, data_offset: 589824
+drwxr-xr-x       128 level1-150
+Cur_pos: 591488, data_offset: 589824
+drwxr-xr-x       128 level1-151
+Cur_pos: 591552, data_offset: 589824
+drwxr-xr-x       128 level1-152
+Cur_pos: 591616, data_offset: 589824
+drwxr-xr-x       128 level1-153
+Cur_pos: 591680, data_offset: 589824
+drwxr-xr-x       128 level1-154
+Cur_pos: 591744, data_offset: 589824
+drwxr-xr-x       128 level1-155
+Cur_pos: 591808, data_offset: 589824
+drwxr-xr-x       128 level1-156
+Cur_pos: 591872, data_offset: 589824
+drwxr-xr-x       128 level1-157
+Cur_pos: 591936, data_offset: 589824
+drwxr-xr-x       128 level1-158
+Cur_pos: 592000, data_offset: 589824
+drwxr-xr-x       128 level1-159
+Cur_pos: 592064, data_offset: 589824
+drwxr-xr-x       128 level1-160
+Cur_pos: 592128, data_offset: 589824
+drwxr-xr-x       128 level1-161
+Cur_pos: 592192, data_offset: 589824
+drwxr-xr-x       128 level1-162
+Cur_pos: 592256, data_offset: 589824
+drwxr-xr-x       128 level1-163
+Cur_pos: 592320, data_offset: 589824
+drwxr-xr-x       128 level1-164
+Cur_pos: 592384, data_offset: 589824
+drwxr-xr-x       128 level1-165
+Cur_pos: 592448, data_offset: 589824
+drwxr-xr-x       128 level1-166
+Cur_pos: 592512, data_offset: 589824
+drwxr-xr-x       128 level1-167
+Cur_pos: 592576, data_offset: 589824
+drwxr-xr-x       128 level1-168
+Cur_pos: 592640, data_offset: 589824
+drwxr-xr-x       128 level1-169
+Cur_pos: 592704, data_offset: 589824
+drwxr-xr-x       128 level1-170
+Cur_pos: 592768, data_offset: 589824
+drwxr-xr-x       128 level1-171
+Cur_pos: 592832, data_offset: 589824
+drwxr-xr-x       128 level1-172
+Cur_pos: 592896, data_offset: 589824
+drwxr-xr-x       128 level1-173
+Cur_pos: 592960, data_offset: 589824
+drwxr-xr-x       128 level1-174
+Cur_pos: 593024, data_offset: 589824
+drwxr-xr-x       128 level1-175
+Cur_pos: 593088, data_offset: 589824
+drwxr-xr-x       128 level1-176
+Cur_pos: 593152, data_offset: 589824
+drwxr-xr-x       128 level1-177
+Cur_pos: 593216, data_offset: 589824
+drwxr-xr-x       128 level1-178
+Cur_pos: 593280, data_offset: 589824
+drwxr-xr-x       128 level1-179
+Cur_pos: 593344, data_offset: 589824
+drwxr-xr-x       128 level1-180
+Cur_pos: 593408, data_offset: 589824
+drwxr-xr-x       128 level1-181
+Cur_pos: 593472, data_offset: 589824
+drwxr-xr-x       128 level1-182
+Cur_pos: 593536, data_offset: 589824
+drwxr-xr-x       128 level1-183
+Cur_pos: 593600, data_offset: 589824
+drwxr-xr-x       128 level1-184
+Cur_pos: 593664, data_offset: 589824
+drwxr-xr-x       128 level1-185
+Cur_pos: 593728, data_offset: 589824
+drwxr-xr-x       128 level1-186
+Cur_pos: 593792, data_offset: 589824
+drwxr-xr-x       128 level1-187
+Cur_pos: 593856, data_offset: 589824
+drwxr-xr-x       128 level1-188
+entreis in zone 64
+Cur_pos: 856064, data_offset: 856064
+drwxr-xr-x       128 level1-189
+Cur_pos: 856128, data_offset: 856064
+drwxr-xr-x       128 level1-190
+Cur_pos: 856192, data_offset: 856064
+drwxr-xr-x       128 level1-191
+Cur_pos: 856256, data_offset: 856064
+drwxr-xr-x       128 level1-192
+Cur_pos: 856320, data_offset: 856064
+drwxr-xr-x       128 level1-193
+Cur_pos: 856384, data_offset: 856064
+drwxr-xr-x       128 level1-194
+Cur_pos: 856448, data_offset: 856064
+drwxr-xr-x       128 level1-195
+Cur_pos: 856512, data_offset: 856064
+drwxr-xr-x       128 level1-196
+Cur_pos: 856576, data_offset: 856064
+drwxr-xr-x       128 level1-197
+Cur_pos: 856640, data_offset: 856064
+drwxr-xr-x       128 level1-198
+Cur_pos: 856704, data_offset: 856064
+drwxr-xr-x       128 level1-199
+Cur_pos: 856768, data_offset: 856064
+drwxr-xr-x       128 level1-200
+Cur_pos: 856832, data_offset: 856064
+drwxr-xr-x       128 level1-201
+Cur_pos: 856896, data_offset: 856064
+drwxr-xr-x       128 level1-202
+Cur_pos: 856960, data_offset: 856064
+drwxr-xr-x       128 level1-203
+Cur_pos: 857024, data_offset: 856064
+drwxr-xr-x       128 level1-204
+Cur_pos: 857088, data_offset: 856064
+drwxr-xr-x       128 level1-205
+Cur_pos: 857152, data_offset: 856064
+drwxr-xr-x       128 level1-206
+Cur_pos: 857216, data_offset: 856064
+drwxr-xr-x       128 level1-207
+Cur_pos: 857280, data_offset: 856064
+drwxr-xr-x       128 level1-208
+Cur_pos: 857344, data_offset: 856064
+drwxr-xr-x       128 level1-209
+Cur_pos: 857408, data_offset: 856064
+drwxr-xr-x       128 level1-210
+Cur_pos: 857472, data_offset: 856064
+drwxr-xr-x       128 level1-211
+Cur_pos: 857536, data_offset: 856064
+drwxr-xr-x       128 level1-212
+Cur_pos: 857600, data_offset: 856064
+drwxr-xr-x       128 level1-213
+Cur_pos: 857664, data_offset: 856064
+drwxr-xr-x       128 level1-214
+Cur_pos: 857728, data_offset: 856064
+drwxr-xr-x       128 level1-215
+Cur_pos: 857792, data_offset: 856064
+drwxr-xr-x       128 level1-216
+Cur_pos: 857856, data_offset: 856064
+drwxr-xr-x       128 level1-217
+Cur_pos: 857920, data_offset: 856064
+drwxr-xr-x       128 level1-218
+Cur_pos: 857984, data_offset: 856064
+drwxr-xr-x       128 level1-219
+Cur_pos: 858048, data_offset: 856064
+drwxr-xr-x       128 level1-220
+Cur_pos: 858112, data_offset: 856064
+drwxr-xr-x       128 level1-221
+Cur_pos: 858176, data_offset: 856064
+drwxr-xr-x       128 level1-222
+Cur_pos: 858240, data_offset: 856064
+drwxr-xr-x       128 level1-223
+Cur_pos: 858304, data_offset: 856064
+drwxr-xr-x       128 level1-224
+Cur_pos: 858368, data_offset: 856064
+drwxr-xr-x       128 level1-225
+Cur_pos: 858432, data_offset: 856064
+-rw-r--r--        64 LastFile
+Cur_pos: 858496, data_offset: 856064
+drwxr-xr-x       128 level1-227
+Cur_pos: 858560, data_offset: 856064
+drwxr-xr-x       128 level1-228
+Cur_pos: 858624, data_offset: 856064
+drwxr-xr-x       128 level1-229
+Cur_pos: 858688, data_offset: 856064
+drwxr-xr-x       128 level1-230
+Cur_pos: 858752, data_offset: 856064
+drwxr-xr-x       128 level1-231
+Cur_pos: 858816, data_offset: 856064
+drwxr-xr-x       128 level1-232
+Cur_pos: 858880, data_offset: 856064
+drwxr-xr-x       128 level1-233
+Cur_pos: 858944, data_offset: 856064
+drwxr-xr-x       128 level1-234
+Cur_pos: 859008, data_offset: 856064
+drwxr-xr-x       128 level1-235
+Cur_pos: 859072, data_offset: 856064
+drwxr-xr-x       128 level1-236
+Cur_pos: 859136, data_offset: 856064
+drwxr-xr-x       128 level1-237
+Cur_pos: 859200, data_offset: 856064
+drwxr-xr-x       128 level1-238
+Cur_pos: 859264, data_offset: 856064
+drwxr-xr-x       128 level1-239
+Cur_pos: 859328, data_offset: 856064
+drwxr-xr-x       128 level1-240
+Cur_pos: 859392, data_offset: 856064
+drwxr-xr-x       128 level1-241
+Cur_pos: 859456, data_offset: 856064
+drwxr-xr-x       128 level1-242
+Cur_pos: 859520, data_offset: 856064
+drwxr-xr-x       128 level1-243
+Cur_pos: 859584, data_offset: 856064
+drwxr-xr-x       128 level1-244
+Cur_pos: 859648, data_offset: 856064
+drwxr-xr-x       128 level1-245
+Cur_pos: 859712, data_offset: 856064
+drwxr-xr-x       128 level1-246
+Cur_pos: 859776, data_offset: 856064
+drwxr-xr-x       128 level1-247
+Cur_pos: 859840, data_offset: 856064
+drwxr-xr-x       128 level1-248
+Cur_pos: 859904, data_offset: 856064
+drwxr-xr-x       128 level1-249
+Cur_pos: 859968, data_offset: 856064
+drwxr-xr-x       128 level1-250
+Cur_pos: 860032, data_offset: 856064
+drwxr-xr-x       128 level1-251
+Cur_pos: 860096, data_offset: 856064
+drwxr-xr-x       128 level1-252
+entreis in zone 64
+Cur_pos: 1122304, data_offset: 1122304
+drwxr-xr-x       128 level1-253
+Cur_pos: 1122368, data_offset: 1122304
+drwxr-xr-x       128 level1-254
+Cur_pos: 1122432, data_offset: 1122304
+drwxr-xr-x       128 level1-255
+Cur_pos: 1122496, data_offset: 1122304
+drwxr-xr-x       128 level1-256
+Cur_pos: 1122560, data_offset: 1122304
+drwxr-xr-x       128 level1-257
+Cur_pos: 1122624, data_offset: 1122304
+drwxr-xr-x       128 level1-258
+Cur_pos: 1122688, data_offset: 1122304
+drwxr-xr-x       128 level1-259
+Cur_pos: 1122752, data_offset: 1122304
+drwxr-xr-x       128 level1-260
+Cur_pos: 1122816, data_offset: 1122304
+drwxr-xr-x       128 level1-261
+Cur_pos: 1122880, data_offset: 1122304
+drwxr-xr-x       128 level1-262
+Cur_pos: 1122944, data_offset: 1122304
+drwxr-xr-x       128 level1-263
+Cur_pos: 1123008, data_offset: 1122304
+drwxr-xr-x       128 level1-264
+Cur_pos: 1123072, data_offset: 1122304
+drwxr-xr-x       128 level1-265
+Cur_pos: 1123136, data_offset: 1122304
+drwxr-xr-x       128 level1-266
+Cur_pos: 1123200, data_offset: 1122304
+drwxr-xr-x       128 level1-267
+Cur_pos: 1123264, data_offset: 1122304
+drwxr-xr-x       128 level1-268
+Cur_pos: 1123328, data_offset: 1122304
+drwxr-xr-x       128 level1-269
+Cur_pos: 1123392, data_offset: 1122304
+drwxr-xr-x       128 level1-270
+Cur_pos: 1123456, data_offset: 1122304
+drwxr-xr-x       128 level1-271
+Cur_pos: 1123520, data_offset: 1122304
+drwxr-xr-x       128 level1-272
+Cur_pos: 1123584, data_offset: 1122304
+drwxr-xr-x       128 level1-273
+Cur_pos: 1123648, data_offset: 1122304
+drwxr-xr-x       128 level1-274
+Cur_pos: 1123712, data_offset: 1122304
+drwxr-xr-x       128 level1-275
+Cur_pos: 1123776, data_offset: 1122304
+drwxr-xr-x       128 level1-276
+Cur_pos: 1123840, data_offset: 1122304
+drwxr-xr-x       128 level1-277
+Cur_pos: 1123904, data_offset: 1122304
+drwxr-xr-x       128 level1-278
+Cur_pos: 1123968, data_offset: 1122304
+drwxr-xr-x       128 level1-279
+Cur_pos: 1124032, data_offset: 1122304
+drwxr-xr-x       128 level1-280
+Cur_pos: 1124096, data_offset: 1122304
+drwxr-xr-x       128 level1-281
+Cur_pos: 1124160, data_offset: 1122304
+drwxr-xr-x       128 level1-282
+Cur_pos: 1124224, data_offset: 1122304
+drwxr-xr-x       128 level1-283
+Cur_pos: 1124288, data_offset: 1122304
+drwxr-xr-x       128 level1-284
+Cur_pos: 1124352, data_offset: 1122304
+drwxr-xr-x       128 level1-285
+Cur_pos: 1124416, data_offset: 1122304
+drwxr-xr-x       128 level1-286
+Cur_pos: 1124480, data_offset: 1122304
+drwxr-xr-x       128 level1-287
+Cur_pos: 1124544, data_offset: 1122304
+drwxr-xr-x       128 level1-288
+Cur_pos: 1124608, data_offset: 1122304
+drwxr-xr-x       128 level1-289
+Cur_pos: 1124672, data_offset: 1122304
+drwxr-xr-x       128 level1-290
+Cur_pos: 1124736, data_offset: 1122304
+drwxr-xr-x       128 level1-291
+Cur_pos: 1124800, data_offset: 1122304
+drwxr-xr-x       128 level1-292
+Cur_pos: 1124864, data_offset: 1122304
+drwxr-xr-x       128 level1-293
+Cur_pos: 1124928, data_offset: 1122304
+drwxr-xr-x       128 level1-294
+Cur_pos: 1124992, data_offset: 1122304
+drwxr-xr-x       128 level1-295
+Cur_pos: 1125056, data_offset: 1122304
+drwxr-xr-x       128 level1-296
+Cur_pos: 1125120, data_offset: 1122304
+drwxr-xr-x       128 level1-297
+Cur_pos: 1125184, data_offset: 1122304
+drwxr-xr-x       128 level1-298
+Cur_pos: 1125248, data_offset: 1122304
+drwxr-xr-x       128 level1-299
+Cur_pos: 1125312, data_offset: 1122304
+drwxr-xr-x       128 level1-300
+Cur_pos: 1125376, data_offset: 1122304
+drwxr-xr-x       128 level1-301
+Cur_pos: 1125440, data_offset: 1122304
+drwxr-xr-x       128 level1-302
+Cur_pos: 1125504, data_offset: 1122304
+drwxr-xr-x       128 level1-303
+Cur_pos: 1125568, data_offset: 1122304
+drwxr-xr-x       128 level1-304
+Cur_pos: 1125632, data_offset: 1122304
+drwxr-xr-x       128 level1-305
+Cur_pos: 1125696, data_offset: 1122304
+drwxr-xr-x       128 level1-306
+Cur_pos: 1125760, data_offset: 1122304
+drwxr-xr-x       128 level1-307
+Cur_pos: 1125824, data_offset: 1122304
+drwxr-xr-x       128 level1-308
+Cur_pos: 1125888, data_offset: 1122304
+drwxr-xr-x       128 level1-309
+Cur_pos: 1125952, data_offset: 1122304
+drwxr-xr-x       128 level1-310
+Cur_pos: 1126016, data_offset: 1122304
+drwxr-xr-x       128 level1-311
+Cur_pos: 1126080, data_offset: 1122304
+drwxr-xr-x       128 level1-312
+Cur_pos: 1126144, data_offset: 1122304
+drwxr-xr-x       128 level1-313
+Cur_pos: 1126208, data_offset: 1122304
+drwxr-xr-x       128 level1-314
+Cur_pos: 1126272, data_offset: 1122304
+drwxr-xr-x       128 level1-315
+Cur_pos: 1126336, data_offset: 1122304
+drwxr-xr-x       128 level1-316
+entreis in zone 64
+Cur_pos: 1388544, data_offset: 1388544
+drwxr-xr-x       128 level1-317
+Cur_pos: 1388608, data_offset: 1388544
+drwxr-xr-x       128 level1-318
+Cur_pos: 1388672, data_offset: 1388544
+drwxr-xr-x       128 level1-319
+Cur_pos: 1388736, data_offset: 1388544
+drwxr-xr-x       128 level1-320
+Cur_pos: 1388800, data_offset: 1388544
+drwxr-xr-x       128 level1-321
+Cur_pos: 1388864, data_offset: 1388544
+drwxr-xr-x       128 level1-322
+Cur_pos: 1388928, data_offset: 1388544
+drwxr-xr-x       128 level1-323
+Cur_pos: 1388992, data_offset: 1388544
+drwxr-xr-x       128 level1-324
+Cur_pos: 1389056, data_offset: 1388544
+drwxr-xr-x       128 level1-325
+Cur_pos: 1389120, data_offset: 1388544
+drwxr-xr-x       128 level1-326
+Cur_pos: 1389184, data_offset: 1388544
+drwxr-xr-x       128 level1-327
+Cur_pos: 1389248, data_offset: 1388544
+drwxr-xr-x       128 level1-328
+Cur_pos: 1389312, data_offset: 1388544
+drwxr-xr-x       128 level1-329
+Cur_pos: 1389376, data_offset: 1388544
+drwxr-xr-x       128 level1-330
+Cur_pos: 1389440, data_offset: 1388544
+drwxr-xr-x       128 level1-331
+Cur_pos: 1389504, data_offset: 1388544
+drwxr-xr-x       128 level1-332
+Cur_pos: 1389568, data_offset: 1388544
+drwxr-xr-x       128 level1-333
+Cur_pos: 1389632, data_offset: 1388544
+drwxr-xr-x       128 level1-334
+Cur_pos: 1389696, data_offset: 1388544
+drwxr-xr-x       128 level1-335
+Cur_pos: 1389760, data_offset: 1388544
+drwxr-xr-x       128 level1-336
+Cur_pos: 1389824, data_offset: 1388544
+Cur_pos: 1389888, data_offset: 1388544
+Cur_pos: 1389952, data_offset: 1388544
+Cur_pos: 1390016, data_offset: 1388544
+Cur_pos: 1390080, data_offset: 1388544
+Cur_pos: 1390144, data_offset: 1388544
+Cur_pos: 1390208, data_offset: 1388544
+Cur_pos: 1390272, data_offset: 1388544
+Cur_pos: 1390336, data_offset: 1388544
+Cur_pos: 1390400, data_offset: 1388544
+Cur_pos: 1390464, data_offset: 1388544
+Cur_pos: 1390528, data_offset: 1388544
+Cur_pos: 1390592, data_offset: 1388544
+Cur_pos: 1390656, data_offset: 1388544
+Cur_pos: 1390720, data_offset: 1388544
+Cur_pos: 1390784, data_offset: 1388544
+Cur_pos: 1390848, data_offset: 1388544
+Cur_pos: 1390912, data_offset: 1388544
+Cur_pos: 1390976, data_offset: 1388544
+Cur_pos: 1391040, data_offset: 1388544
+Cur_pos: 1391104, data_offset: 1388544
+Cur_pos: 1391168, data_offset: 1388544
+Cur_pos: 1391232, data_offset: 1388544
+Cur_pos: 1391296, data_offset: 1388544
+Cur_pos: 1391360, data_offset: 1388544
+Cur_pos: 1391424, data_offset: 1388544
+Cur_pos: 1391488, data_offset: 1388544
+Cur_pos: 1391552, data_offset: 1388544
+Cur_pos: 1391616, data_offset: 1388544
+Cur_pos: 1391680, data_offset: 1388544
+Cur_pos: 1391744, data_offset: 1388544
+Cur_pos: 1391808, data_offset: 1388544
+Cur_pos: 1391872, data_offset: 1388544
+Cur_pos: 1391936, data_offset: 1388544
+Cur_pos: 1392000, data_offset: 1388544
+Cur_pos: 1392064, data_offset: 1388544
+Cur_pos: 1392128, data_offset: 1388544
+Cur_pos: 1392192, data_offset: 1388544
+Cur_pos: 1392256, data_offset: 1388544
+Cur_pos: 1392320, data_offset: 1388544
+Cur_pos: 1392384, data_offset: 1388544
+Cur_pos: 1392448, data_offset: 1388544
+Cur_pos: 1392512, data_offset: 1388544
+Cur_pos: 1392576, data_offset: 1388544
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 6
+> entreis in zone 64
+> Cur_pos: 65536, data_offset: 65536
+2a13
+> Cur_pos: 65600, data_offset: 65536
+3a15
+> Cur_pos: 65664, data_offset: 65536
+4a17
+> Cur_pos: 65728, data_offset: 65536
+5a19
+> Cur_pos: 65792, data_offset: 65536
+6a21
+> Cur_pos: 65856, data_offset: 65536
+7a23
+> Cur_pos: 65920, data_offset: 65536
+8a25
+> Cur_pos: 65984, data_offset: 65536
+9a27
+> Cur_pos: 66048, data_offset: 65536
+10a29
+> Cur_pos: 66112, data_offset: 65536
+11a31
+> Cur_pos: 66176, data_offset: 65536
+12a33
+> Cur_pos: 66240, data_offset: 65536
+13a35
+> Cur_pos: 66304, data_offset: 65536
+14a37
+> Cur_pos: 66368, data_offset: 65536
+15a39
+> Cur_pos: 66432, data_offset: 65536
+16a41
+> Cur_pos: 66496, data_offset: 65536
+17a43
+> Cur_pos: 66560, data_offset: 65536
+18a45
+> Cur_pos: 66624, data_offset: 65536
+19a47
+> Cur_pos: 66688, data_offset: 65536
+20a49
+> Cur_pos: 66752, data_offset: 65536
+21a51
+> Cur_pos: 66816, data_offset: 65536
+22a53
+> Cur_pos: 66880, data_offset: 65536
+23a55
+> Cur_pos: 66944, data_offset: 65536
+24a57
+> Cur_pos: 67008, data_offset: 65536
+25a59
+> Cur_pos: 67072, data_offset: 65536
+26a61
+> Cur_pos: 67136, data_offset: 65536
+27a63
+> Cur_pos: 67200, data_offset: 65536
+28a65
+> Cur_pos: 67264, data_offset: 65536
+29a67
+> Cur_pos: 67328, data_offset: 65536
+30a69
+> Cur_pos: 67392, data_offset: 65536
+31a71
+> Cur_pos: 67456, data_offset: 65536
+32a73
+> Cur_pos: 67520, data_offset: 65536
+33a75
+> Cur_pos: 67584, data_offset: 65536
+34a77
+> Cur_pos: 67648, data_offset: 65536
+35a79
+> Cur_pos: 67712, data_offset: 65536
+36a81
+> Cur_pos: 67776, data_offset: 65536
+37a83
+> Cur_pos: 67840, data_offset: 65536
+38a85
+> Cur_pos: 67904, data_offset: 65536
+39a87
+> Cur_pos: 67968, data_offset: 65536
+40a89
+> Cur_pos: 68032, data_offset: 65536
+41a91
+> Cur_pos: 68096, data_offset: 65536
+42a93
+> Cur_pos: 68160, data_offset: 65536
+43a95
+> Cur_pos: 68224, data_offset: 65536
+44a97
+> Cur_pos: 68288, data_offset: 65536
+45a99
+> Cur_pos: 68352, data_offset: 65536
+46a101
+> Cur_pos: 68416, data_offset: 65536
+47a103
+> Cur_pos: 68480, data_offset: 65536
+48a105
+> Cur_pos: 68544, data_offset: 65536
+49a107
+> Cur_pos: 68608, data_offset: 65536
+50a109
+> Cur_pos: 68672, data_offset: 65536
+51a111
+> Cur_pos: 68736, data_offset: 65536
+52a113
+> Cur_pos: 68800, data_offset: 65536
+53a115
+> Cur_pos: 68864, data_offset: 65536
+54a117
+> Cur_pos: 68928, data_offset: 65536
+55a119
+> Cur_pos: 68992, data_offset: 65536
+56a121
+> Cur_pos: 69056, data_offset: 65536
+57a123
+> Cur_pos: 69120, data_offset: 65536
+58a125
+> Cur_pos: 69184, data_offset: 65536
+59a127
+> Cur_pos: 69248, data_offset: 65536
+60a129
+> Cur_pos: 69312, data_offset: 65536
+61a131
+> Cur_pos: 69376, data_offset: 65536
+62a133
+> Cur_pos: 69440, data_offset: 65536
+63a135
+> Cur_pos: 69504, data_offset: 65536
+64a137
+> Cur_pos: 69568, data_offset: 65536
+65a139,140
+> entreis in zone 64
+> Cur_pos: 323584, data_offset: 323584
+66a142
+> Cur_pos: 323648, data_offset: 323584
+67a144
+> Cur_pos: 323712, data_offset: 323584
+68a146
+> Cur_pos: 323776, data_offset: 323584
+69a148
+> Cur_pos: 323840, data_offset: 323584
+70a150
+> Cur_pos: 323904, data_offset: 323584
+71a152
+> Cur_pos: 323968, data_offset: 323584
+72a154
+> Cur_pos: 324032, data_offset: 323584
+73a156
+> Cur_pos: 324096, data_offset: 323584
+74a158
+> Cur_pos: 324160, data_offset: 323584
+75a160
+> Cur_pos: 324224, data_offset: 323584
+76a162
+> Cur_pos: 324288, data_offset: 323584
+77a164
+> Cur_pos: 324352, data_offset: 323584
+78a166
+> Cur_pos: 324416, data_offset: 323584
+79a168
+> Cur_pos: 324480, data_offset: 323584
+80a170
+> Cur_pos: 324544, data_offset: 323584
+81a172
+> Cur_pos: 324608, data_offset: 323584
+82a174
+> Cur_pos: 324672, data_offset: 323584
+83a176
+> Cur_pos: 324736, data_offset: 323584
+84a178
+> Cur_pos: 324800, data_offset: 323584
+85a180
+> Cur_pos: 324864, data_offset: 323584
+86a182
+> Cur_pos: 324928, data_offset: 323584
+87a184
+> Cur_pos: 324992, data_offset: 323584
+88a186
+> Cur_pos: 325056, data_offset: 323584
+89a188
+> Cur_pos: 325120, data_offset: 323584
+90a190
+> Cur_pos: 325184, data_offset: 323584
+91a192
+> Cur_pos: 325248, data_offset: 323584
+92a194
+> Cur_pos: 325312, data_offset: 323584
+93a196
+> Cur_pos: 325376, data_offset: 323584
+94a198
+> Cur_pos: 325440, data_offset: 323584
+95a200
+> Cur_pos: 325504, data_offset: 323584
+96a202
+> Cur_pos: 325568, data_offset: 323584
+97a204
+> Cur_pos: 325632, data_offset: 323584
+98a206
+> Cur_pos: 325696, data_offset: 323584
+99a208
+> Cur_pos: 325760, data_offset: 323584
+100a210
+> Cur_pos: 325824, data_offset: 323584
+101a212
+> Cur_pos: 325888, data_offset: 323584
+102a214
+> Cur_pos: 325952, data_offset: 323584
+103a216
+> Cur_pos: 326016, data_offset: 323584
+104a218
+> Cur_pos: 326080, data_offset: 323584
+105a220
+> Cur_pos: 326144, data_offset: 323584
+106a222
+> Cur_pos: 326208, data_offset: 323584
+107a224
+> Cur_pos: 326272, data_offset: 323584
+108a226
+> Cur_pos: 326336, data_offset: 323584
+109a228
+> Cur_pos: 326400, data_offset: 323584
+110a230
+> Cur_pos: 326464, data_offset: 323584
+111a232
+> Cur_pos: 326528, data_offset: 323584
+112a234
+> Cur_pos: 326592, data_offset: 323584
+113a236
+> Cur_pos: 326656, data_offset: 323584
+114a238
+> Cur_pos: 326720, data_offset: 323584
+115a240
+> Cur_pos: 326784, data_offset: 323584
+116a242
+> Cur_pos: 326848, data_offset: 323584
+117a244
+> Cur_pos: 326912, data_offset: 323584
+118a246
+> Cur_pos: 326976, data_offset: 323584
+119a248
+> Cur_pos: 327040, data_offset: 323584
+120a250
+> Cur_pos: 327104, data_offset: 323584
+121a252
+> Cur_pos: 327168, data_offset: 323584
+122a254
+> Cur_pos: 327232, data_offset: 323584
+123a256
+> Cur_pos: 327296, data_offset: 323584
+124a258
+> Cur_pos: 327360, data_offset: 323584
+125a260
+> Cur_pos: 327424, data_offset: 323584
+126a262
+> Cur_pos: 327488, data_offset: 323584
+127a264
+> Cur_pos: 327552, data_offset: 323584
+128a266
+> Cur_pos: 327616, data_offset: 323584
+129a268,269
+> entreis in zone 64
+> Cur_pos: 589824, data_offset: 589824
+130a271
+> Cur_pos: 589888, data_offset: 589824
+131a273
+> Cur_pos: 589952, data_offset: 589824
+132a275
+> Cur_pos: 590016, data_offset: 589824
+133a277
+> Cur_pos: 590080, data_offset: 589824
+134a279
+> Cur_pos: 590144, data_offset: 589824
+135a281
+> Cur_pos: 590208, data_offset: 589824
+136a283
+> Cur_pos: 590272, data_offset: 589824
+137a285
+> Cur_pos: 590336, data_offset: 589824
+138a287
+> Cur_pos: 590400, data_offset: 589824
+139a289
+> Cur_pos: 590464, data_offset: 589824
+140a291
+> Cur_pos: 590528, data_offset: 589824
+141a293
+> Cur_pos: 590592, data_offset: 589824
+142a295
+> Cur_pos: 590656, data_offset: 589824
+143a297
+> Cur_pos: 590720, data_offset: 589824
+144a299
+> Cur_pos: 590784, data_offset: 589824
+145a301
+> Cur_pos: 590848, data_offset: 589824
+146a303
+> Cur_pos: 590912, data_offset: 589824
+147a305
+> Cur_pos: 590976, data_offset: 589824
+148a307
+> Cur_pos: 591040, data_offset: 589824
+149a309
+> Cur_pos: 591104, data_offset: 589824
+150a311
+> Cur_pos: 591168, data_offset: 589824
+151a313
+> Cur_pos: 591232, data_offset: 589824
+152a315
+> Cur_pos: 591296, data_offset: 589824
+153a317
+> Cur_pos: 591360, data_offset: 589824
+154a319
+> Cur_pos: 591424, data_offset: 589824
+155a321
+> Cur_pos: 591488, data_offset: 589824
+156a323
+> Cur_pos: 591552, data_offset: 589824
+157a325
+> Cur_pos: 591616, data_offset: 589824
+158a327
+> Cur_pos: 591680, data_offset: 589824
+159a329
+> Cur_pos: 591744, data_offset: 589824
+160a331
+> Cur_pos: 591808, data_offset: 589824
+161a333
+> Cur_pos: 591872, data_offset: 589824
+162a335
+> Cur_pos: 591936, data_offset: 589824
+163a337
+> Cur_pos: 592000, data_offset: 589824
+164a339
+> Cur_pos: 592064, data_offset: 589824
+165a341
+> Cur_pos: 592128, data_offset: 589824
+166a343
+> Cur_pos: 592192, data_offset: 589824
+167a345
+> Cur_pos: 592256, data_offset: 589824
+168a347
+> Cur_pos: 592320, data_offset: 589824
+169a349
+> Cur_pos: 592384, data_offset: 589824
+170a351
+> Cur_pos: 592448, data_offset: 589824
+171a353
+> Cur_pos: 592512, data_offset: 589824
+172a355
+> Cur_pos: 592576, data_offset: 589824
+173a357
+> Cur_pos: 592640, data_offset: 589824
+174a359
+> Cur_pos: 592704, data_offset: 589824
+175a361
+> Cur_pos: 592768, data_offset: 589824
+176a363
+> Cur_pos: 592832, data_offset: 589824
+177a365
+> Cur_pos: 592896, data_offset: 589824
+178a367
+> Cur_pos: 592960, data_offset: 589824
+179a369
+> Cur_pos: 593024, data_offset: 589824
+180a371
+> Cur_pos: 593088, data_offset: 589824
+181a373
+> Cur_pos: 593152, data_offset: 589824
+182a375
+> Cur_pos: 593216, data_offset: 589824
+183a377
+> Cur_pos: 593280, data_offset: 589824
+184a379
+> Cur_pos: 593344, data_offset: 589824
+185a381
+> Cur_pos: 593408, data_offset: 589824
+186a383
+> Cur_pos: 593472, data_offset: 589824
+187a385
+> Cur_pos: 593536, data_offset: 589824
+188a387
+> Cur_pos: 593600, data_offset: 589824
+189a389
+> Cur_pos: 593664, data_offset: 589824
+190a391
+> Cur_pos: 593728, data_offset: 589824
+191a393
+> Cur_pos: 593792, data_offset: 589824
+192a395
+> Cur_pos: 593856, data_offset: 589824
+193a397,398
+> entreis in zone 64
+> Cur_pos: 856064, data_offset: 856064
+194a400
+> Cur_pos: 856128, data_offset: 856064
+195a402
+> Cur_pos: 856192, data_offset: 856064
+196a404
+> Cur_pos: 856256, data_offset: 856064
+197a406
+> Cur_pos: 856320, data_offset: 856064
+198a408
+> Cur_pos: 856384, data_offset: 856064
+199a410
+> Cur_pos: 856448, data_offset: 856064
+200a412
+> Cur_pos: 856512, data_offset: 856064
+201a414
+> Cur_pos: 856576, data_offset: 856064
+202a416
+> Cur_pos: 856640, data_offset: 856064
+203a418
+> Cur_pos: 856704, data_offset: 856064
+204a420
+> Cur_pos: 856768, data_offset: 856064
+205a422
+> Cur_pos: 856832, data_offset: 856064
+206a424
+> Cur_pos: 856896, data_offset: 856064
+207a426
+> Cur_pos: 856960, data_offset: 856064
+208a428
+> Cur_pos: 857024, data_offset: 856064
+209a430
+> Cur_pos: 857088, data_offset: 856064
+210a432
+> Cur_pos: 857152, data_offset: 856064
+211a434
+> Cur_pos: 857216, data_offset: 856064
+212a436
+> Cur_pos: 857280, data_offset: 856064
+213a438
+> Cur_pos: 857344, data_offset: 856064
+214a440
+> Cur_pos: 857408, data_offset: 856064
+215a442
+> Cur_pos: 857472, data_offset: 856064
+216a444
+> Cur_pos: 857536, data_offset: 856064
+217a446
+> Cur_pos: 857600, data_offset: 856064
+218a448
+> Cur_pos: 857664, data_offset: 856064
+219a450
+> Cur_pos: 857728, data_offset: 856064
+220a452
+> Cur_pos: 857792, data_offset: 856064
+221a454
+> Cur_pos: 857856, data_offset: 856064
+222a456
+> Cur_pos: 857920, data_offset: 856064
+223a458
+> Cur_pos: 857984, data_offset: 856064
+224a460
+> Cur_pos: 858048, data_offset: 856064
+225a462
+> Cur_pos: 858112, data_offset: 856064
+226a464
+> Cur_pos: 858176, data_offset: 856064
+227a466
+> Cur_pos: 858240, data_offset: 856064
+228a468
+> Cur_pos: 858304, data_offset: 856064
+229a470
+> Cur_pos: 858368, data_offset: 856064
+230a472
+> Cur_pos: 858432, data_offset: 856064
+231a474
+> Cur_pos: 858496, data_offset: 856064
+232a476
+> Cur_pos: 858560, data_offset: 856064
+233a478
+> Cur_pos: 858624, data_offset: 856064
+234a480
+> Cur_pos: 858688, data_offset: 856064
+235a482
+> Cur_pos: 858752, data_offset: 856064
+236a484
+> Cur_pos: 858816, data_offset: 856064
+237a486
+> Cur_pos: 858880, data_offset: 856064
+238a488
+> Cur_pos: 858944, data_offset: 856064
+239a490
+> Cur_pos: 859008, data_offset: 856064
+240a492
+> Cur_pos: 859072, data_offset: 856064
+241a494
+> Cur_pos: 859136, data_offset: 856064
+242a496
+> Cur_pos: 859200, data_offset: 856064
+243a498
+> Cur_pos: 859264, data_offset: 856064
+244a500
+> Cur_pos: 859328, data_offset: 856064
+245a502
+> Cur_pos: 859392, data_offset: 856064
+246a504
+> Cur_pos: 859456, data_offset: 856064
+247a506
+> Cur_pos: 859520, data_offset: 856064
+248a508
+> Cur_pos: 859584, data_offset: 856064
+249a510
+> Cur_pos: 859648, data_offset: 856064
+250a512
+> Cur_pos: 859712, data_offset: 856064
+251a514
+> Cur_pos: 859776, data_offset: 856064
+252a516
+> Cur_pos: 859840, data_offset: 856064
+253a518
+> Cur_pos: 859904, data_offset: 856064
+254a520
+> Cur_pos: 859968, data_offset: 856064
+255a522
+> Cur_pos: 860032, data_offset: 856064
+256a524
+> Cur_pos: 860096, data_offset: 856064
+257a526,527
+> entreis in zone 64
+> Cur_pos: 1122304, data_offset: 1122304
+258a529
+> Cur_pos: 1122368, data_offset: 1122304
+259a531
+> Cur_pos: 1122432, data_offset: 1122304
+260a533
+> Cur_pos: 1122496, data_offset: 1122304
+261a535
+> Cur_pos: 1122560, data_offset: 1122304
+262a537
+> Cur_pos: 1122624, data_offset: 1122304
+263a539
+> Cur_pos: 1122688, data_offset: 1122304
+264a541
+> Cur_pos: 1122752, data_offset: 1122304
+265a543
+> Cur_pos: 1122816, data_offset: 1122304
+266a545
+> Cur_pos: 1122880, data_offset: 1122304
+267a547
+> Cur_pos: 1122944, data_offset: 1122304
+268a549
+> Cur_pos: 1123008, data_offset: 1122304
+269a551
+> Cur_pos: 1123072, data_offset: 1122304
+270a553
+> Cur_pos: 1123136, data_offset: 1122304
+271a555
+> Cur_pos: 1123200, data_offset: 1122304
+272a557
+> Cur_pos: 1123264, data_offset: 1122304
+273a559
+> Cur_pos: 1123328, data_offset: 1122304
+274a561
+> Cur_pos: 1123392, data_offset: 1122304
+275a563
+> Cur_pos: 1123456, data_offset: 1122304
+276a565
+> Cur_pos: 1123520, data_offset: 1122304
+277a567
+> Cur_pos: 1123584, data_offset: 1122304
+278a569
+> Cur_pos: 1123648, data_offset: 1122304
+279a571
+> Cur_pos: 1123712, data_offset: 1122304
+280a573
+> Cur_pos: 1123776, data_offset: 1122304
+281a575
+> Cur_pos: 1123840, data_offset: 1122304
+282a577
+> Cur_pos: 1123904, data_offset: 1122304
+283a579
+> Cur_pos: 1123968, data_offset: 1122304
+284a581
+> Cur_pos: 1124032, data_offset: 1122304
+285a583
+> Cur_pos: 1124096, data_offset: 1122304
+286a585
+> Cur_pos: 1124160, data_offset: 1122304
+287a587
+> Cur_pos: 1124224, data_offset: 1122304
+288a589
+> Cur_pos: 1124288, data_offset: 1122304
+289a591
+> Cur_pos: 1124352, data_offset: 1122304
+290a593
+> Cur_pos: 1124416, data_offset: 1122304
+291a595
+> Cur_pos: 1124480, data_offset: 1122304
+292a597
+> Cur_pos: 1124544, data_offset: 1122304
+293a599
+> Cur_pos: 1124608, data_offset: 1122304
+294a601
+> Cur_pos: 1124672, data_offset: 1122304
+295a603
+> Cur_pos: 1124736, data_offset: 1122304
+296a605
+> Cur_pos: 1124800, data_offset: 1122304
+297a607
+> Cur_pos: 1124864, data_offset: 1122304
+298a609
+> Cur_pos: 1124928, data_offset: 1122304
+299a611
+> Cur_pos: 1124992, data_offset: 1122304
+300a613
+> Cur_pos: 1125056, data_offset: 1122304
+301a615
+> Cur_pos: 1125120, data_offset: 1122304
+302a617
+> Cur_pos: 1125184, data_offset: 1122304
+303a619
+> Cur_pos: 1125248, data_offset: 1122304
+304a621
+> Cur_pos: 1125312, data_offset: 1122304
+305a623
+> Cur_pos: 1125376, data_offset: 1122304
+306a625
+> Cur_pos: 1125440, data_offset: 1122304
+307a627
+> Cur_pos: 1125504, data_offset: 1122304
+308a629
+> Cur_pos: 1125568, data_offset: 1122304
+309a631
+> Cur_pos: 1125632, data_offset: 1122304
+310a633
+> Cur_pos: 1125696, data_offset: 1122304
+311a635
+> Cur_pos: 1125760, data_offset: 1122304
+312a637
+> Cur_pos: 1125824, data_offset: 1122304
+313a639
+> Cur_pos: 1125888, data_offset: 1122304
+314a641
+> Cur_pos: 1125952, data_offset: 1122304
+315a643
+> Cur_pos: 1126016, data_offset: 1122304
+316a645
+> Cur_pos: 1126080, data_offset: 1122304
+317a647
+> Cur_pos: 1126144, data_offset: 1122304
+318a649
+> Cur_pos: 1126208, data_offset: 1122304
+319a651
+> Cur_pos: 1126272, data_offset: 1122304
+320a653
+> Cur_pos: 1126336, data_offset: 1122304
+321a655,656
+> entreis in zone 64
+> Cur_pos: 1388544, data_offset: 1388544
+322a658
+> Cur_pos: 1388608, data_offset: 1388544
+323a660
+> Cur_pos: 1388672, data_offset: 1388544
+324a662
+> Cur_pos: 1388736, data_offset: 1388544
+325a664
+> Cur_pos: 1388800, data_offset: 1388544
+326a666
+> Cur_pos: 1388864, data_offset: 1388544
+327a668
+> Cur_pos: 1388928, data_offset: 1388544
+328a670
+> Cur_pos: 1388992, data_offset: 1388544
+329a672
+> Cur_pos: 1389056, data_offset: 1388544
+330a674
+> Cur_pos: 1389120, data_offset: 1388544
+331a676
+> Cur_pos: 1389184, data_offset: 1388544
+332a678
+> Cur_pos: 1389248, data_offset: 1388544
+333a680
+> Cur_pos: 1389312, data_offset: 1388544
+334a682
+> Cur_pos: 1389376, data_offset: 1388544
+335a684
+> Cur_pos: 1389440, data_offset: 1388544
+336a686
+> Cur_pos: 1389504, data_offset: 1388544
+337a688
+> Cur_pos: 1389568, data_offset: 1388544
+338a690
+> Cur_pos: 1389632, data_offset: 1388544
+339a692
+> Cur_pos: 1389696, data_offset: 1388544
+340a694
+> Cur_pos: 1389760, data_offset: 1388544
+341a696,739
+> Cur_pos: 1389824, data_offset: 1388544
+> Cur_pos: 1389888, data_offset: 1388544
+> Cur_pos: 1389952, data_offset: 1388544
+> Cur_pos: 1390016, data_offset: 1388544
+> Cur_pos: 1390080, data_offset: 1388544
+> Cur_pos: 1390144, data_offset: 1388544
+> Cur_pos: 1390208, data_offset: 1388544
+> Cur_pos: 1390272, data_offset: 1388544
+> Cur_pos: 1390336, data_offset: 1388544
+> Cur_pos: 1390400, data_offset: 1388544
+> Cur_pos: 1390464, data_offset: 1388544
+> Cur_pos: 1390528, data_offset: 1388544
+> Cur_pos: 1390592, data_offset: 1388544
+> Cur_pos: 1390656, data_offset: 1388544
+> Cur_pos: 1390720, data_offset: 1388544
+> Cur_pos: 1390784, data_offset: 1388544
+> Cur_pos: 1390848, data_offset: 1388544
+> Cur_pos: 1390912, data_offset: 1388544
+> Cur_pos: 1390976, data_offset: 1388544
+> Cur_pos: 1391040, data_offset: 1388544
+> Cur_pos: 1391104, data_offset: 1388544
+> Cur_pos: 1391168, data_offset: 1388544
+> Cur_pos: 1391232, data_offset: 1388544
+> Cur_pos: 1391296, data_offset: 1388544
+> Cur_pos: 1391360, data_offset: 1388544
+> Cur_pos: 1391424, data_offset: 1388544
+> Cur_pos: 1391488, data_offset: 1388544
+> Cur_pos: 1391552, data_offset: 1388544
+> Cur_pos: 1391616, data_offset: 1388544
+> Cur_pos: 1391680, data_offset: 1388544
+> Cur_pos: 1391744, data_offset: 1388544
+> Cur_pos: 1391808, data_offset: 1388544
+> Cur_pos: 1391872, data_offset: 1388544
+> Cur_pos: 1391936, data_offset: 1388544
+> Cur_pos: 1392000, data_offset: 1388544
+> Cur_pos: 1392064, data_offset: 1388544
+> Cur_pos: 1392128, data_offset: 1388544
+> Cur_pos: 1392192, data_offset: 1388544
+> Cur_pos: 1392256, data_offset: 1388544
+> Cur_pos: 1392320, data_offset: 1388544
+> Cur_pos: 1392384, data_offset: 1388544
+> Cur_pos: 1392448, data_offset: 1388544
+> Cur_pos: 1392512, data_offset: 1388544
+> Cur_pos: 1392576, data_offset: 1388544
+
+
+-----------------
+32) multi-zone directory (file):
+     minls /home/pn-cs453/Given/Asgn5/Images/BigDirectories LastFile 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: LastFile
+Reading superblock
+Print file info called
+Path in pfi: LastFile
+Permissions: -1540551792
+-rw-r--r--        64 LastFile
+Diffs: ( < Reference > Testfile ):
+0a1,8
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: LastFile
+> Reading superblock
+> Print file info called
+> Path in pfi: LastFile
+> Permissions: -1540551792
+
+
+-----------------
+33) indirect directory:
+     minls /home/pn-cs453/Given/Asgn5/Images/BigIndirectDirs Level1/Level2 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: Level1/Level2
+Reading superblock
+Print file info called
+Path in pfi: Level1
+Level1:
+Zone count 1
+entreis in zone 64
+Cur_pos: 73728, data_offset: 73728
+drwxr-xr-x       192 .
+Cur_pos: 73792, data_offset: 73728
+drwxrwxrwx     21824 ..
+Cur_pos: 73856, data_offset: 73728
+drwxr-xr-x     49024 Level2
+Cur_pos: 73920, data_offset: 73728
+Diffs: ( < Reference > Testfile ):
+1,766c1,17
+< /Level1/Level2:
+< drwxr-xr-x     49024 .
+< drwxr-xr-x       192 ..
+< drwxr-xr-x       128 BigDir
+< -rw-r--r--         0 file_000
+< -rw-r--r--         0 file_001
+< -rw-r--r--         0 file_002
+< -rw-r--r--         0 file_003
+< -rw-r--r--         0 file_004
+< -rw-r--r--         0 file_005
+< -rw-r--r--         0 file_006
+< -rw-r--r--         0 file_007
+< -rw-r--r--         0 file_010
+< -rw-r--r--         0 file_011
+< -rw-r--r--         0 file_012
+< -rw-r--r--         0 file_013
+< -rw-r--r--         0 file_014
+< -rw-r--r--         0 file_015
+< -rw-r--r--         0 file_016
+< -rw-r--r--         0 file_017
+< -rw-r--r--         0 file_020
+< -rw-r--r--         0 file_021
+< -rw-r--r--         0 file_022
+< -rw-r--r--         0 file_023
+< -rw-r--r--         0 file_024
+< -rw-r--r--         0 file_025
+< -rw-r--r--         0 file_026
+< -rw-r--r--         0 file_027
+< -rw-r--r--         0 file_030
+< -rw-r--r--         0 file_031
+< -rw-r--r--         0 file_032
+< -rw-r--r--         0 file_033
+< -rw-r--r--         0 file_034
+< -rw-r--r--         0 file_035
+< -rw-r--r--         0 file_036
+< -rw-r--r--         0 file_037
+< -rw-r--r--         0 file_040
+< -rw-r--r--         0 file_041
+< -rw-r--r--         0 file_042
+< -rw-r--r--         0 file_043
+< -rw-r--r--         0 file_044
+< -rw-r--r--         0 file_045
+< -rw-r--r--         0 file_046
+< -rw-r--r--         0 file_047
+< -rw-r--r--         0 file_050
+< -rw-r--r--         0 file_051
+< -rw-r--r--         0 file_052
+< -rw-r--r--         0 file_053
+< -rw-r--r--         0 file_054
+< -rw-r--r--         0 file_055
+< -rw-r--r--         0 file_056
+< -rw-r--r--         0 file_057
+< -rw-r--r--         0 file_060
+< -rw-r--r--         0 file_061
+< -rw-r--r--         0 file_062
+< -rw-r--r--         0 file_063
+< -rw-r--r--         0 file_064
+< -rw-r--r--         0 file_065
+< -rw-r--r--         0 file_066
+< -rw-r--r--         0 file_067
+< -rw-r--r--         0 file_070
+< -rw-r--r--         0 file_071
+< -rw-r--r--         0 file_072
+< -rw-r--r--         0 file_073
+< -rw-r--r--         0 file_074
+< -rw-r--r--         0 file_075
+< -rw-r--r--         0 file_076
+< -rw-r--r--         0 file_077
+< -rw-r--r--         0 file_080
+< -rw-r--r--         0 file_081
+< -rw-r--r--         0 file_082
+< -rw-r--r--         0 file_083
+< -rw-r--r--         0 file_084
+< -rw-r--r--         0 file_085
+< -rw-r--r--         0 file_086
+< -rw-r--r--         0 file_087
+< -rw-r--r--         0 file_090
+< -rw-r--r--         0 file_091
+< -rw-r--r--         0 file_092
+< -rw-r--r--         0 file_093
+< -rw-r--r--         0 file_094
+< -rw-r--r--         0 file_095
+< -rw-r--r--         0 file_096
+< -rw-r--r--         0 file_097
+< -rw-r--r--         0 file_100
+< -rw-r--r--         0 file_101
+< -rw-r--r--         0 file_102
+< -rw-r--r--         0 file_103
+< -rw-r--r--         0 file_104
+< -rw-r--r--         0 file_105
+< -rw-r--r--         0 file_106
+< -rw-r--r--         0 file_107
+< -rw-r--r--         0 file_110
+< -rw-r--r--         0 file_111
+< -rw-r--r--         0 file_112
+< -rw-r--r--         0 file_113
+< -rw-r--r--         0 file_114
+< -rw-r--r--         0 file_115
+< -rw-r--r--         0 file_116
+< -rw-r--r--         0 file_117
+< -rw-r--r--         0 file_120
+< -rw-r--r--         0 file_121
+< -rw-r--r--         0 file_122
+< -rw-r--r--         0 file_123
+< -rw-r--r--         0 file_124
+< -rw-r--r--         0 file_125
+< -rw-r--r--         0 file_126
+< -rw-r--r--         0 file_127
+< -rw-r--r--         0 file_130
+< -rw-r--r--         0 file_131
+< -rw-r--r--         0 file_132
+< -rw-r--r--         0 file_133
+< -rw-r--r--         0 file_134
+< -rw-r--r--         0 file_135
+< -rw-r--r--         0 file_136
+< -rw-r--r--         0 file_137
+< -rw-r--r--         0 file_140
+< -rw-r--r--         0 file_141
+< -rw-r--r--         0 file_142
+< -rw-r--r--         0 file_143
+< -rw-r--r--         0 file_144
+< -rw-r--r--         0 file_145
+< -rw-r--r--         0 file_146
+< -rw-r--r--         0 file_147
+< -rw-r--r--         0 file_150
+< -rw-r--r--         0 file_151
+< -rw-r--r--         0 file_152
+< -rw-r--r--         0 file_153
+< -rw-r--r--         0 file_154
+< -rw-r--r--         0 file_155
+< -rw-r--r--         0 file_156
+< -rw-r--r--         0 file_157
+< -rw-r--r--         0 file_160
+< -rw-r--r--         0 file_161
+< -rw-r--r--         0 file_162
+< -rw-r--r--         0 file_163
+< -rw-r--r--         0 file_164
+< -rw-r--r--         0 file_165
+< -rw-r--r--         0 file_166
+< -rw-r--r--         0 file_167
+< -rw-r--r--         0 file_170
+< -rw-r--r--         0 file_171
+< -rw-r--r--         0 file_172
+< -rw-r--r--         0 file_173
+< -rw-r--r--         0 file_174
+< -rw-r--r--         0 file_175
+< -rw-r--r--         0 file_176
+< -rw-r--r--         0 file_177
+< -rw-r--r--         0 file_180
+< -rw-r--r--         0 file_181
+< -rw-r--r--         0 file_182
+< -rw-r--r--         0 file_183
+< -rw-r--r--         0 file_184
+< -rw-r--r--         0 file_185
+< -rw-r--r--         0 file_186
+< -rw-r--r--         0 file_187
+< -rw-r--r--         0 file_190
+< -rw-r--r--         0 file_191
+< -rw-r--r--         0 file_192
+< -rw-r--r--         0 file_193
+< -rw-r--r--         0 file_194
+< -rw-r--r--         0 file_195
+< -rw-r--r--         0 file_196
+< -rw-r--r--         0 file_197
+< -rw-r--r--         0 file_200
+< -rw-r--r--         0 file_201
+< -rw-r--r--         0 file_202
+< -rw-r--r--         0 file_203
+< -rw-r--r--         0 file_204
+< -rw-r--r--         0 file_205
+< -rw-r--r--         0 file_206
+< -rw-r--r--         0 file_207
+< -rw-r--r--         0 file_210
+< -rw-r--r--         0 file_211
+< -rw-r--r--         0 file_212
+< -rw-r--r--         0 file_213
+< -rw-r--r--         0 file_214
+< -rw-r--r--         0 file_215
+< -rw-r--r--         0 file_216
+< -rw-r--r--         0 file_217
+< -rw-r--r--         0 file_220
+< -rw-r--r--         0 file_221
+< -rw-r--r--         0 file_222
+< -rw-r--r--         0 file_223
+< -rw-r--r--         0 file_224
+< -rw-r--r--         0 file_225
+< -rw-r--r--         0 file_226
+< -rw-r--r--         0 file_227
+< -rw-r--r--         0 file_230
+< -rw-r--r--         0 file_231
+< -rw-r--r--         0 file_232
+< -rw-r--r--         0 file_233
+< -rw-r--r--         0 file_234
+< -rw-r--r--         0 file_235
+< -rw-r--r--         0 file_236
+< -rw-r--r--         0 file_237
+< -rw-r--r--         0 file_240
+< -rw-r--r--         0 file_241
+< -rw-r--r--         0 file_242
+< -rw-r--r--         0 file_243
+< -rw-r--r--         0 file_244
+< -rw-r--r--         0 file_245
+< -rw-r--r--         0 file_246
+< -rw-r--r--         0 file_247
+< -rw-r--r--         0 file_250
+< -rw-r--r--         0 file_251
+< -rw-r--r--         0 file_252
+< -rw-r--r--         0 file_253
+< -rw-r--r--         0 file_254
+< -rw-r--r--         0 file_255
+< -rw-r--r--         0 file_256
+< -rw-r--r--         0 file_257
+< -rw-r--r--         0 file_260
+< -rw-r--r--         0 file_261
+< -rw-r--r--         0 file_262
+< -rw-r--r--         0 file_263
+< -rw-r--r--         0 file_264
+< -rw-r--r--         0 file_265
+< -rw-r--r--         0 file_266
+< -rw-r--r--         0 file_267
+< -rw-r--r--         0 file_270
+< -rw-r--r--         0 file_271
+< -rw-r--r--         0 file_272
+< -rw-r--r--         0 file_273
+< -rw-r--r--         0 file_274
+< -rw-r--r--         0 file_275
+< -rw-r--r--         0 file_276
+< -rw-r--r--         0 file_277
+< -rw-r--r--         0 file_280
+< -rw-r--r--         0 file_281
+< -rw-r--r--         0 file_282
+< -rw-r--r--         0 file_283
+< -rw-r--r--         0 file_284
+< -rw-r--r--         0 file_285
+< -rw-r--r--         0 file_286
+< -rw-r--r--         0 file_287
+< -rw-r--r--         0 file_290
+< -rw-r--r--         0 file_291
+< -rw-r--r--         0 file_292
+< -rw-r--r--         0 file_293
+< -rw-r--r--         0 file_294
+< -rw-r--r--         0 file_295
+< -rw-r--r--         0 file_296
+< -rw-r--r--         0 file_297
+< -rw-r--r--         0 file_300
+< -rw-r--r--         0 file_301
+< -rw-r--r--         0 file_302
+< -rw-r--r--         0 file_303
+< -rw-r--r--         0 file_304
+< -rw-r--r--         0 file_305
+< -rw-r--r--         0 file_306
+< -rw-r--r--         0 file_307
+< -rw-r--r--         0 file_310
+< -rw-r--r--         0 file_311
+< -rw-r--r--         0 file_312
+< -rw-r--r--         0 file_313
+< -rw-r--r--         0 file_314
+< -rw-r--r--         0 file_315
+< -rw-r--r--         0 file_316
+< -rw-r--r--         0 file_317
+< -rw-r--r--         0 file_320
+< -rw-r--r--         0 file_321
+< -rw-r--r--         0 file_322
+< -rw-r--r--         0 file_323
+< -rw-r--r--         0 file_324
+< -rw-r--r--         0 file_325
+< -rw-r--r--         0 file_326
+< -rw-r--r--         0 file_327
+< -rw-r--r--         0 file_330
+< -rw-r--r--         0 file_331
+< -rw-r--r--         0 file_332
+< -rw-r--r--         0 file_333
+< -rw-r--r--         0 file_334
+< -rw-r--r--         0 file_335
+< -rw-r--r--         0 file_336
+< -rw-r--r--         0 file_337
+< -rw-r--r--         0 file_340
+< -rw-r--r--         0 file_341
+< -rw-r--r--         0 file_342
+< -rw-r--r--         0 file_343
+< -rw-r--r--         0 file_344
+< -rw-r--r--         0 file_345
+< -rw-r--r--         0 file_346
+< -rw-r--r--         0 file_347
+< -rw-r--r--         0 file_350
+< -rw-r--r--         0 file_351
+< -rw-r--r--         0 file_352
+< -rw-r--r--         0 file_353
+< -rw-r--r--         0 file_354
+< -rw-r--r--         0 file_355
+< -rw-r--r--         0 file_356
+< -rw-r--r--         0 file_357
+< -rw-r--r--         0 file_360
+< -rw-r--r--         0 file_361
+< -rw-r--r--         0 file_362
+< -rw-r--r--         0 file_363
+< -rw-r--r--         0 file_364
+< -rw-r--r--         0 file_365
+< -rw-r--r--         0 file_366
+< -rw-r--r--         0 file_367
+< -rw-r--r--         0 file_370
+< -rw-r--r--         0 file_371
+< -rw-r--r--         0 file_372
+< -rw-r--r--         0 file_373
+< -rw-r--r--         0 file_374
+< -rw-r--r--         0 file_375
+< -rw-r--r--         0 file_376
+< -rw-r--r--         0 file_377
+< -rw-r--r--         0 file_380
+< -rw-r--r--         0 file_381
+< -rw-r--r--         0 file_382
+< -rw-r--r--         0 file_383
+< -rw-r--r--         0 file_384
+< -rw-r--r--         0 file_385
+< -rw-r--r--         0 file_386
+< -rw-r--r--         0 file_387
+< -rw-r--r--         0 file_390
+< -rw-r--r--         0 file_391
+< -rw-r--r--         0 file_392
+< -rw-r--r--         0 file_393
+< -rw-r--r--         0 file_394
+< -rw-r--r--         0 file_395
+< -rw-r--r--         0 file_396
+< -rw-r--r--         0 file_397
+< -rw-r--r--         0 file_400
+< -rw-r--r--         0 file_401
+< -rw-r--r--         0 file_402
+< -rw-r--r--         0 file_403
+< -rw-r--r--         0 file_404
+< -rw-r--r--         0 file_405
+< -rw-r--r--         0 file_406
+< -rw-r--r--         0 file_407
+< -rw-r--r--         0 file_410
+< -rw-r--r--         0 file_411
+< -rw-r--r--         0 file_412
+< -rw-r--r--         0 file_413
+< -rw-r--r--         0 file_414
+< -rw-r--r--         0 file_415
+< -rw-r--r--         0 file_416
+< -rw-r--r--         0 file_417
+< -rw-r--r--         0 file_420
+< -rw-r--r--         0 file_421
+< -rw-r--r--         0 file_422
+< -rw-r--r--         0 file_423
+< -rw-r--r--         0 file_424
+< -rw-r--r--         0 file_425
+< -rw-r--r--         0 file_426
+< -rw-r--r--         0 file_427
+< -rw-r--r--         0 file_430
+< -rw-r--r--         0 file_431
+< -rw-r--r--         0 file_432
+< -rw-r--r--         0 file_433
+< -rw-r--r--         0 file_434
+< -rw-r--r--         0 file_435
+< -rw-r--r--         0 file_436
+< -rw-r--r--         0 file_437
+< -rw-r--r--         0 file_440
+< -rw-r--r--         0 file_441
+< -rw-r--r--         0 file_442
+< -rw-r--r--         0 file_443
+< -rw-r--r--         0 file_444
+< -rw-r--r--         0 file_445
+< -rw-r--r--         0 file_446
+< -rw-r--r--         0 file_447
+< -rw-r--r--         0 file_450
+< -rw-r--r--         0 file_451
+< -rw-r--r--         0 file_452
+< -rw-r--r--         0 file_453
+< -rw-r--r--         0 file_454
+< -rw-r--r--         0 file_455
+< -rw-r--r--         0 file_456
+< -rw-r--r--         0 file_457
+< -rw-r--r--         0 file_460
+< -rw-r--r--         0 file_461
+< -rw-r--r--         0 file_462
+< -rw-r--r--         0 file_463
+< -rw-r--r--         0 file_464
+< -rw-r--r--         0 file_465
+< -rw-r--r--         0 file_466
+< -rw-r--r--         0 file_467
+< -rw-r--r--         0 file_470
+< -rw-r--r--         0 file_471
+< -rw-r--r--         0 file_472
+< -rw-r--r--         0 file_473
+< -rw-r--r--         0 file_474
+< -rw-r--r--         0 file_475
+< -rw-r--r--         0 file_476
+< -rw-r--r--         0 file_477
+< -rw-r--r--         0 file_480
+< -rw-r--r--         0 file_481
+< -rw-r--r--         0 file_482
+< -rw-r--r--         0 file_483
+< -rw-r--r--         0 file_484
+< -rw-r--r--         0 file_485
+< -rw-r--r--         0 file_486
+< -rw-r--r--         0 file_487
+< -rw-r--r--         0 file_490
+< -rw-r--r--         0 file_491
+< -rw-r--r--         0 file_492
+< -rw-r--r--         0 file_493
+< -rw-r--r--         0 file_494
+< -rw-r--r--         0 file_495
+< -rw-r--r--         0 file_496
+< -rw-r--r--         0 file_497
+< -rw-r--r--         0 file_500
+< -rw-r--r--         0 file_501
+< -rw-r--r--         0 file_502
+< -rw-r--r--         0 file_503
+< -rw-r--r--         0 file_504
+< -rw-r--r--         0 file_505
+< -rw-r--r--         0 file_506
+< -rw-r--r--         0 file_507
+< -rw-r--r--         0 file_510
+< -rw-r--r--         0 file_511
+< -rw-r--r--         0 file_512
+< -rw-r--r--         0 file_513
+< -rw-r--r--         0 file_514
+< -rw-r--r--         0 file_515
+< -rw-r--r--         0 file_516
+< -rw-r--r--         0 file_517
+< -rw-r--r--         0 file_520
+< -rw-r--r--         0 file_521
+< -rw-r--r--         0 file_522
+< -rw-r--r--         0 file_523
+< -rw-r--r--         0 file_524
+< -rw-r--r--         0 file_525
+< -rw-r--r--         0 file_526
+< -rw-r--r--         0 file_527
+< -rw-r--r--         0 file_530
+< -rw-r--r--         0 file_531
+< -rw-r--r--         0 file_532
+< -rw-r--r--         0 file_533
+< -rw-r--r--         0 file_534
+< -rw-r--r--         0 file_535
+< -rw-r--r--         0 file_536
+< -rw-r--r--         0 file_537
+< -rw-r--r--         0 file_540
+< -rw-r--r--         0 file_541
+< -rw-r--r--         0 file_542
+< -rw-r--r--         0 file_543
+< -rw-r--r--         0 file_544
+< -rw-r--r--         0 file_545
+< -rw-r--r--         0 file_546
+< -rw-r--r--         0 file_547
+< -rw-r--r--         0 file_550
+< -rw-r--r--         0 file_551
+< -rw-r--r--         0 file_552
+< -rw-r--r--         0 file_553
+< -rw-r--r--         0 file_554
+< -rw-r--r--         0 file_555
+< -rw-r--r--         0 file_556
+< -rw-r--r--         0 file_557
+< -rw-r--r--         0 file_560
+< -rw-r--r--         0 file_561
+< -rw-r--r--         0 file_562
+< -rw-r--r--         0 file_563
+< -rw-r--r--         0 file_564
+< -rw-r--r--         0 file_565
+< -rw-r--r--         0 file_566
+< -rw-r--r--         0 file_567
+< -rw-r--r--         0 file_570
+< -rw-r--r--         0 file_571
+< -rw-r--r--         0 file_572
+< -rw-r--r--         0 file_573
+< -rw-r--r--         0 file_574
+< -rw-r--r--         0 file_575
+< -rw-r--r--         0 file_576
+< -rw-r--r--         0 file_577
+< -rw-r--r--         0 file_580
+< -rw-r--r--         0 file_581
+< -rw-r--r--         0 file_582
+< -rw-r--r--         0 file_583
+< -rw-r--r--         0 file_584
+< -rw-r--r--         0 file_585
+< -rw-r--r--         0 file_586
+< -rw-r--r--         0 file_587
+< -rw-r--r--         0 file_590
+< -rw-r--r--         0 file_591
+< -rw-r--r--         0 file_592
+< -rw-r--r--         0 file_593
+< -rw-r--r--         0 file_594
+< -rw-r--r--         0 file_595
+< -rw-r--r--         0 file_596
+< -rw-r--r--         0 file_597
+< -rw-r--r--         0 file_600
+< -rw-r--r--         0 file_601
+< -rw-r--r--         0 file_602
+< -rw-r--r--         0 file_603
+< -rw-r--r--         0 file_604
+< -rw-r--r--         0 file_605
+< -rw-r--r--         0 file_606
+< -rw-r--r--         0 file_607
+< -rw-r--r--         0 file_610
+< -rw-r--r--         0 file_611
+< -rw-r--r--         0 file_612
+< -rw-r--r--         0 file_613
+< -rw-r--r--         0 file_614
+< -rw-r--r--         0 file_615
+< -rw-r--r--         0 file_616
+< -rw-r--r--         0 file_617
+< -rw-r--r--         0 file_620
+< -rw-r--r--         0 file_621
+< -rw-r--r--         0 file_622
+< -rw-r--r--         0 file_623
+< -rw-r--r--         0 file_624
+< -rw-r--r--         0 file_625
+< -rw-r--r--         0 file_626
+< -rw-r--r--         0 file_627
+< -rw-r--r--         0 file_630
+< -rw-r--r--         0 file_631
+< -rw-r--r--         0 file_632
+< -rw-r--r--         0 file_633
+< -rw-r--r--         0 file_634
+< -rw-r--r--         0 file_635
+< -rw-r--r--         0 file_636
+< -rw-r--r--         0 file_637
+< -rw-r--r--         0 file_640
+< -rw-r--r--         0 file_641
+< -rw-r--r--         0 file_642
+< -rw-r--r--         0 file_643
+< -rw-r--r--         0 file_644
+< -rw-r--r--         0 file_645
+< -rw-r--r--         0 file_646
+< -rw-r--r--         0 file_647
+< -rw-r--r--         0 file_650
+< -rw-r--r--         0 file_651
+< -rw-r--r--         0 file_652
+< -rw-r--r--         0 file_653
+< -rw-r--r--         0 file_654
+< -rw-r--r--         0 file_655
+< -rw-r--r--         0 file_656
+< -rw-r--r--         0 file_657
+< -rw-r--r--         0 file_660
+< -rw-r--r--         0 file_661
+< -rw-r--r--         0 file_662
+< -rw-r--r--         0 file_663
+< -rw-r--r--         0 file_664
+< -rw-r--r--         0 file_665
+< -rw-r--r--         0 file_666
+< -rw-r--r--         0 file_667
+< -rw-r--r--         0 file_670
+< -rw-r--r--         0 file_671
+< -rw-r--r--         0 file_672
+< -rw-r--r--         0 file_673
+< -rw-r--r--         0 file_674
+< -rw-r--r--         0 file_675
+< -rw-r--r--         0 file_676
+< -rw-r--r--         0 file_677
+< -rw-r--r--         0 file_680
+< -rw-r--r--         0 file_681
+< -rw-r--r--         0 file_682
+< -rw-r--r--         0 file_683
+< -rw-r--r--         0 file_684
+< -rw-r--r--         0 file_685
+< -rw-r--r--         0 file_686
+< -rw-r--r--         0 file_687
+< -rw-r--r--         0 file_690
+< -rw-r--r--         0 file_691
+< -rw-r--r--         0 file_692
+< -rw-r--r--         0 file_693
+< -rw-r--r--         0 file_694
+< -rw-r--r--         0 file_695
+< -rw-r--r--         0 file_696
+< -rw-r--r--         0 file_697
+< -rw-r--r--         0 file_700
+< -rw-r--r--         0 file_701
+< -rw-r--r--         0 file_702
+< -rw-r--r--         0 file_703
+< -rw-r--r--         0 file_704
+< -rw-r--r--         0 file_705
+< -rw-r--r--         0 file_706
+< -rw-r--r--         0 file_707
+< -rw-r--r--         0 file_710
+< -rw-r--r--         0 file_711
+< -rw-r--r--         0 file_712
+< -rw-r--r--         0 file_713
+< -rw-r--r--         0 file_714
+< -rw-r--r--         0 file_715
+< -rw-r--r--         0 file_716
+< -rw-r--r--         0 file_717
+< -rw-r--r--         0 file_720
+< -rw-r--r--         0 file_721
+< -rw-r--r--         0 file_722
+< -rw-r--r--         0 file_723
+< -rw-r--r--         0 file_724
+< -rw-r--r--         0 file_725
+< -rw-r--r--         0 file_726
+< -rw-r--r--         0 file_727
+< -rw-r--r--         0 file_730
+< -rw-r--r--         0 file_731
+< -rw-r--r--         0 file_732
+< -rw-r--r--         0 file_733
+< -rw-r--r--         0 file_734
+< -rw-r--r--         0 file_735
+< -rw-r--r--         0 file_736
+< -rw-r--r--         0 file_737
+< -rw-r--r--         0 file_740
+< -rw-r--r--         0 file_741
+< -rw-r--r--         0 file_742
+< -rw-r--r--         0 file_743
+< -rw-r--r--         0 file_744
+< -rw-r--r--         0 file_745
+< -rw-r--r--         0 file_746
+< -rw-r--r--         0 file_747
+< -rw-r--r--         0 file_750
+< -rw-r--r--         0 file_751
+< -rw-r--r--         0 file_752
+< -rw-r--r--         0 file_753
+< -rw-r--r--         0 file_754
+< -rw-r--r--         0 file_755
+< -rw-r--r--         0 file_756
+< -rw-r--r--         0 file_757
+< -rw-r--r--         0 file_760
+< -rw-r--r--         0 file_761
+< -rw-r--r--         0 file_762
+< -rw-r--r--         0 file_763
+< -rw-r--r--         0 file_764
+< -rw-r--r--         0 file_765
+< -rw-r--r--         0 file_766
+< -rw-r--r--         0 file_767
+< -rw-r--r--         0 file_770
+< -rw-r--r--         0 file_771
+< -rw-r--r--         0 file_772
+< -rw-r--r--         0 file_773
+< -rw-r--r--         0 file_774
+< -rw-r--r--         0 file_775
+< -rw-r--r--         0 file_776
+< -rw-r--r--         0 file_777
+< -rw-r--r--         0 file_780
+< -rw-r--r--         0 file_781
+< -rw-r--r--         0 file_782
+< -rw-r--r--         0 file_783
+< -rw-r--r--         0 file_784
+< -rw-r--r--         0 file_785
+< -rw-r--r--         0 file_786
+< -rw-r--r--         0 file_787
+< -rw-r--r--         0 file_790
+< -rw-r--r--         0 file_791
+< -rw-r--r--         0 file_792
+< -rw-r--r--         0 file_793
+< -rw-r--r--         0 file_794
+< -rw-r--r--         0 file_795
+< -rw-r--r--         0 file_796
+< -rw-r--r--         0 file_797
+< -rw-r--r--         0 file_800
+< -rw-r--r--         0 file_801
+< -rw-r--r--         0 file_802
+< -rw-r--r--         0 file_803
+< -rw-r--r--         0 file_804
+< -rw-r--r--         0 file_805
+< -rw-r--r--         0 file_806
+< -rw-r--r--         0 file_807
+< -rw-r--r--         0 file_810
+< -rw-r--r--         0 file_811
+< -rw-r--r--         0 file_812
+< -rw-r--r--         0 file_813
+< -rw-r--r--         0 file_814
+< -rw-r--r--         0 file_815
+< -rw-r--r--         0 file_816
+< -rw-r--r--         0 file_817
+< -rw-r--r--         0 file_820
+< -rw-r--r--         0 file_821
+< -rw-r--r--         0 file_822
+< -rw-r--r--         0 file_823
+< -rw-r--r--         0 file_824
+< -rw-r--r--         0 file_825
+< -rw-r--r--         0 file_826
+< -rw-r--r--         0 file_827
+< -rw-r--r--         0 file_830
+< -rw-r--r--         0 file_831
+< -rw-r--r--         0 file_832
+< -rw-r--r--         0 file_833
+< -rw-r--r--         0 file_834
+< -rw-r--r--         0 file_835
+< -rw-r--r--         0 file_836
+< -rw-r--r--         0 file_837
+< -rw-r--r--         0 file_840
+< -rw-r--r--         0 file_841
+< -rw-r--r--         0 file_842
+< -rw-r--r--         0 file_843
+< -rw-r--r--         0 file_844
+< -rw-r--r--         0 file_845
+< -rw-r--r--         0 file_846
+< -rw-r--r--         0 file_847
+< -rw-r--r--         0 file_850
+< -rw-r--r--         0 file_851
+< -rw-r--r--         0 file_852
+< -rw-r--r--         0 file_853
+< -rw-r--r--         0 file_854
+< -rw-r--r--         0 file_855
+< -rw-r--r--         0 file_856
+< -rw-r--r--         0 file_857
+< -rw-r--r--         0 file_860
+< -rw-r--r--         0 file_861
+< -rw-r--r--         0 file_862
+< -rw-r--r--         0 file_863
+< -rw-r--r--         0 file_864
+< -rw-r--r--         0 file_865
+< -rw-r--r--         0 file_866
+< -rw-r--r--         0 file_867
+< -rw-r--r--         0 file_870
+< -rw-r--r--         0 file_871
+< -rw-r--r--         0 file_872
+< -rw-r--r--         0 file_873
+< -rw-r--r--         0 file_874
+< -rw-r--r--         0 file_875
+< -rw-r--r--         0 file_876
+< -rw-r--r--         0 file_877
+< -rw-r--r--         0 file_880
+< -rw-r--r--         0 file_881
+< -rw-r--r--         0 file_882
+< -rw-r--r--         0 file_883
+< -rw-r--r--         0 file_884
+< -rw-r--r--         0 file_885
+< -rw-r--r--         0 file_886
+< -rw-r--r--         0 file_887
+< -rw-r--r--         0 file_890
+< -rw-r--r--         0 file_891
+< -rw-r--r--         0 file_892
+< -rw-r--r--         0 file_893
+< -rw-r--r--         0 file_894
+< -rw-r--r--         0 file_895
+< -rw-r--r--         0 file_896
+< -rw-r--r--         0 file_897
+< -rw-r--r--         0 file_900
+< -rw-r--r--         0 file_901
+< -rw-r--r--         0 file_902
+< -rw-r--r--         0 file_903
+< -rw-r--r--         0 file_904
+< -rw-r--r--         0 file_905
+< -rw-r--r--         0 file_906
+< -rw-r--r--         0 file_907
+< -rw-r--r--         0 file_910
+< -rw-r--r--         0 file_911
+< -rw-r--r--         0 file_912
+< -rw-r--r--         0 file_913
+< -rw-r--r--         0 file_914
+< -rw-r--r--         0 file_915
+< -rw-r--r--         0 file_916
+< -rw-r--r--         0 file_917
+< -rw-r--r--         0 file_920
+< -rw-r--r--         0 file_921
+< -rw-r--r--         0 file_922
+< -rw-r--r--         0 file_923
+< -rw-r--r--         0 file_924
+< -rw-r--r--         0 file_925
+< -rw-r--r--         0 file_926
+< -rw-r--r--         0 file_927
+< -rw-r--r--         0 file_930
+< -rw-r--r--         0 file_931
+< -rw-r--r--         0 file_932
+< -rw-r--r--         0 file_933
+< -rw-r--r--         0 file_934
+< -rw-r--r--         0 file_935
+< -rw-r--r--         0 file_936
+< -rw-r--r--         0 file_937
+< -rw-r--r--         0 file_940
+< -rw-r--r--         0 file_941
+< -rw-r--r--         0 file_942
+< -rw-r--r--         0 file_943
+< -rw-r--r--         0 file_944
+< -rw-r--r--         0 file_945
+< -rw-r--r--         0 file_946
+< -rw-r--r--         0 file_947
+< -rw-r--r--         0 file_950
+< -rw-r--r--       113 LastFile
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: Level1/Level2
+> Reading superblock
+> Print file info called
+> Path in pfi: Level1
+> Level1:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 73728, data_offset: 73728
+> drwxr-xr-x       192 .
+> Cur_pos: 73792, data_offset: 73728
+> drwxrwxrwx     21824 ..
+> Cur_pos: 73856, data_offset: 73728
+> drwxr-xr-x     49024 Level2
+> Cur_pos: 73920, data_offset: 73728
+
+
+-----------------
+34) indirect directory (file):
+     minls /home/pn-cs453/Given/Asgn5/Images/BigIndirectDirs Level1/Level2/LastFile 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: Level1/Level2/LastFile
+Reading superblock
+Submitted program's stderr:
+Path entry LastFile not found
+Failed to find path: Level1/LastFile
+
+
+-----------------
+35) directories-deleted:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Deleted 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Deleted
+Reading superblock
+Print file info called
+Path in pfi: Deleted
+Deleted:
+Zone count 1
+entreis in zone 64
+Cur_pos: 4665344, data_offset: 4665344
+drwxr-xr-x       768 .
+Cur_pos: 4665408, data_offset: 4665344
+drwxrwxrwx       448 ..
+Cur_pos: 4665472, data_offset: 4665344
+Cur_pos: 4665536, data_offset: 4665344
+-rwxr-xr-x       181 File-02
+Cur_pos: 4665600, data_offset: 4665344
+Cur_pos: 4665664, data_offset: 4665344
+-rwxr-xr-x       181 File-04
+Cur_pos: 4665728, data_offset: 4665344
+Cur_pos: 4665792, data_offset: 4665344
+-rwxr-xr-x       181 File-06
+Cur_pos: 4665856, data_offset: 4665344
+Cur_pos: 4665920, data_offset: 4665344
+-rwxr-xr-x       181 File-08
+Cur_pos: 4665984, data_offset: 4665344
+Cur_pos: 4666048, data_offset: 4665344
+-rwxr-xr-x       181 File-10
+Cur_pos: 4666112, data_offset: 4665344
+Diffs: ( < Reference > Testfile ):
+1c1,11
+< /Deleted:
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Deleted
+> Reading superblock
+> Print file info called
+> Path in pfi: Deleted
+> Deleted:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 4665344, data_offset: 4665344
+2a13
+> Cur_pos: 4665408, data_offset: 4665344
+3a15,16
+> Cur_pos: 4665472, data_offset: 4665344
+> Cur_pos: 4665536, data_offset: 4665344
+4a18,19
+> Cur_pos: 4665600, data_offset: 4665344
+> Cur_pos: 4665664, data_offset: 4665344
+5a21,22
+> Cur_pos: 4665728, data_offset: 4665344
+> Cur_pos: 4665792, data_offset: 4665344
+6a24,25
+> Cur_pos: 4665856, data_offset: 4665344
+> Cur_pos: 4665920, data_offset: 4665344
+7a27,28
+> Cur_pos: 4665984, data_offset: 4665344
+> Cur_pos: 4666048, data_offset: 4665344
+8a30
+> Cur_pos: 4666112, data_offset: 4665344
+
+
+-----------------
+36) directories-ok file:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Deleted/File-10 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Deleted/File-10
+Reading superblock
+Print file info called
+Path in pfi: Deleted
+Deleted:
+Zone count 1
+entreis in zone 64
+Cur_pos: 4665344, data_offset: 4665344
+drwxr-xr-x       768 .
+Cur_pos: 4665408, data_offset: 4665344
+drwxrwxrwx       448 ..
+Cur_pos: 4665472, data_offset: 4665344
+Cur_pos: 4665536, data_offset: 4665344
+-rwxr-xr-x       181 File-02
+Cur_pos: 4665600, data_offset: 4665344
+Cur_pos: 4665664, data_offset: 4665344
+-rwxr-xr-x       181 File-04
+Cur_pos: 4665728, data_offset: 4665344
+Cur_pos: 4665792, data_offset: 4665344
+-rwxr-xr-x       181 File-06
+Cur_pos: 4665856, data_offset: 4665344
+Cur_pos: 4665920, data_offset: 4665344
+-rwxr-xr-x       181 File-08
+Cur_pos: 4665984, data_offset: 4665344
+Cur_pos: 4666048, data_offset: 4665344
+-rwxr-xr-x       181 File-10
+Cur_pos: 4666112, data_offset: 4665344
+Diffs: ( < Reference > Testfile ):
+1c1,30
+< -rwxr-xr-x       181 Deleted/File-10
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Deleted/File-10
+> Reading superblock
+> Print file info called
+> Path in pfi: Deleted
+> Deleted:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 4665344, data_offset: 4665344
+> drwxr-xr-x       768 .
+> Cur_pos: 4665408, data_offset: 4665344
+> drwxrwxrwx       448 ..
+> Cur_pos: 4665472, data_offset: 4665344
+> Cur_pos: 4665536, data_offset: 4665344
+> -rwxr-xr-x       181 File-02
+> Cur_pos: 4665600, data_offset: 4665344
+> Cur_pos: 4665664, data_offset: 4665344
+> -rwxr-xr-x       181 File-04
+> Cur_pos: 4665728, data_offset: 4665344
+> Cur_pos: 4665792, data_offset: 4665344
+> -rwxr-xr-x       181 File-06
+> Cur_pos: 4665856, data_offset: 4665344
+> Cur_pos: 4665920, data_offset: 4665344
+> -rwxr-xr-x       181 File-08
+> Cur_pos: 4665984, data_offset: 4665344
+> Cur_pos: 4666048, data_offset: 4665344
+> -rwxr-xr-x       181 File-10
+> Cur_pos: 4666112, data_offset: 4665344
+
+
+-----------------
+37) directories-deleted file:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Deleted/File-05 
+-----------------
+ This test was expected to fail, but reports success.
+ Perhaps a bad exit status or no error message?
+
+
+-----------------
+38) 1k blocks. dir.:
+     minls /home/pn-cs453/Given/Asgn5/Images/SmallBlocks--1k 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 16
+Cur_pos: 50176, data_offset: 50176
+drwxrwxrwx       256 .
+Cur_pos: 50240, data_offset: 50176
+drwxrwxrwx       256 ..
+Cur_pos: 50304, data_offset: 50176
+drwxr-xr-x       256 DirOne
+Cur_pos: 50368, data_offset: 50176
+drwxr-xr-x       256 DirTwo
+Cur_pos: 50432, data_offset: 50176
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 16
+> Cur_pos: 50176, data_offset: 50176
+2a13
+> Cur_pos: 50240, data_offset: 50176
+3a15
+> Cur_pos: 50304, data_offset: 50176
+4a17
+> Cur_pos: 50368, data_offset: 50176
+5a19
+> Cur_pos: 50432, data_offset: 50176
+
+
+-----------------
+39) 1k blocks. file.:
+     minls /home/pn-cs453/Given/Asgn5/Images/SmallBlocks--1k DirTwo/FileTwo  
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: DirTwo/FileTwo
+Reading superblock
+Print file info called
+Path in pfi: DirTwo
+DirTwo:
+Zone count 1
+entreis in zone 16
+Cur_pos: 52224, data_offset: 52224
+drwxr-xr-x       256 .
+Cur_pos: 52288, data_offset: 52224
+drwxrwxrwx       256 ..
+Cur_pos: 52352, data_offset: 52224
+-rwxr-xr-x     20596 FileTwo
+Cur_pos: 52416, data_offset: 52224
+-rwxr-xr-x      6552 FileOne
+Cur_pos: 52480, data_offset: 52224
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x     20596 DirTwo/FileTwo
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: DirTwo/FileTwo
+> Reading superblock
+> Print file info called
+> Path in pfi: DirTwo
+> DirTwo:
+> Zone count 1
+> entreis in zone 16
+> Cur_pos: 52224, data_offset: 52224
+> drwxr-xr-x       256 .
+> Cur_pos: 52288, data_offset: 52224
+> drwxrwxrwx       256 ..
+> Cur_pos: 52352, data_offset: 52224
+> -rwxr-xr-x     20596 FileTwo
+> Cur_pos: 52416, data_offset: 52224
+> -rwxr-xr-x      6552 FileOne
+> Cur_pos: 52480, data_offset: 52224
+
+
+-----------------
+40) 16k zones. dir.:
+     minls /home/pn-cs453/Given/Asgn5/Images/BigZones-16k 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 256
+Cur_pos: 81920, data_offset: 81920
+drwxrwxrwx       256 .
+Cur_pos: 81984, data_offset: 81920
+drwxrwxrwx       256 ..
+Cur_pos: 82048, data_offset: 81920
+drwxr-xr-x       256 DirOne
+Cur_pos: 82112, data_offset: 81920
+drwxr-xr-x       256 DirTwo
+Cur_pos: 82176, data_offset: 81920
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 256
+> Cur_pos: 81920, data_offset: 81920
+2a13
+> Cur_pos: 81984, data_offset: 81920
+3a15
+> Cur_pos: 82048, data_offset: 81920
+4a17
+> Cur_pos: 82112, data_offset: 81920
+5a19
+> Cur_pos: 82176, data_offset: 81920
+
+
+-----------------
+41) 16k zones. file.:
+     minls /home/pn-cs453/Given/Asgn5/Images/BigZones-16k /DirOne/FileTwo 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /DirOne/FileTwo
+Reading superblock
+Print file info called
+Path in pfi: DirOne
+DirOne:
+Zone count 1
+entreis in zone 256
+Cur_pos: 98304, data_offset: 98304
+drwxr-xr-x       256 .
+Cur_pos: 98368, data_offset: 98304
+drwxrwxrwx       256 ..
+Cur_pos: 98432, data_offset: 98304
+-rwxr-xr-x       181 FileOne
+Cur_pos: 98496, data_offset: 98304
+-rwxr-xr-x       181 FileTwo
+Cur_pos: 98560, data_offset: 98304
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x       181 DirOne/FileTwo
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /DirOne/FileTwo
+> Reading superblock
+> Print file info called
+> Path in pfi: DirOne
+> DirOne:
+> Zone count 1
+> entreis in zone 256
+> Cur_pos: 98304, data_offset: 98304
+> drwxr-xr-x       256 .
+> Cur_pos: 98368, data_offset: 98304
+> drwxrwxrwx       256 ..
+> Cur_pos: 98432, data_offset: 98304
+> -rwxr-xr-x       181 FileOne
+> Cur_pos: 98496, data_offset: 98304
+> -rwxr-xr-x       181 FileTwo
+> Cur_pos: 98560, data_offset: 98304
+
+
+-----------------
+42) 64k zones. dir:
+     minls /home/pn-cs453/Given/Asgn5/Images/ReallyBigZones-64k 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 1024
+Cur_pos: 327680, data_offset: 327680
+drwxrwxrwx       256 .
+Cur_pos: 327744, data_offset: 327680
+drwxrwxrwx       256 ..
+Cur_pos: 327808, data_offset: 327680
+drwxr-xr-x       256 DirOne
+Cur_pos: 327872, data_offset: 327680
+drwxr-xr-x       256 DirTwo
+Cur_pos: 327936, data_offset: 327680
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 1024
+> Cur_pos: 327680, data_offset: 327680
+2a13
+> Cur_pos: 327744, data_offset: 327680
+3a15
+> Cur_pos: 327808, data_offset: 327680
+4a17
+> Cur_pos: 327872, data_offset: 327680
+5a19
+> Cur_pos: 327936, data_offset: 327680
+
+
+-----------------
+43) 64k zones. file:
+     minls /home/pn-cs453/Given/Asgn5/Images/ReallyBigZones-64k DirTwo/FileOne 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: DirTwo/FileOne
+Reading superblock
+Print file info called
+Path in pfi: DirTwo
+DirTwo:
+Zone count 1
+entreis in zone 1024
+Cur_pos: 589824, data_offset: 589824
+drwxr-xr-x       256 .
+Cur_pos: 589888, data_offset: 589824
+drwxrwxrwx       256 ..
+Cur_pos: 589952, data_offset: 589824
+-rwxr-xr-x     20596 FileTwo
+Cur_pos: 590016, data_offset: 589824
+-rwxr-xr-x      6552 FileOne
+Cur_pos: 590080, data_offset: 589824
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x      6552 DirTwo/FileOne
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: DirTwo/FileOne
+> Reading superblock
+> Print file info called
+> Path in pfi: DirTwo
+> DirTwo:
+> Zone count 1
+> entreis in zone 1024
+> Cur_pos: 589824, data_offset: 589824
+> drwxr-xr-x       256 .
+> Cur_pos: 589888, data_offset: 589824
+> drwxrwxrwx       256 ..
+> Cur_pos: 589952, data_offset: 589824
+> -rwxr-xr-x     20596 FileTwo
+> Cur_pos: 590016, data_offset: 589824
+> -rwxr-xr-x      6552 FileOne
+> Cur_pos: 590080, data_offset: 589824
+
+
+-----------------
+44) 64k zones. longpath:
+     minls /home/pn-cs453/Given/Asgn5/Images/ReallyBigZones-64k /./.././../DirTwo/FileOne 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /./.././../DirTwo/FileOne
+Reading superblock
+Print file info called
+Path in pfi: ././DirTwo
+././DirTwo:
+Zone count 1
+entreis in zone 1024
+Cur_pos: 589824, data_offset: 589824
+drwxr-xr-x       256 .
+Cur_pos: 589888, data_offset: 589824
+drwxrwxrwx       256 ..
+Cur_pos: 589952, data_offset: 589824
+-rwxr-xr-x     20596 FileTwo
+Cur_pos: 590016, data_offset: 589824
+-rwxr-xr-x      6552 FileOne
+Cur_pos: 590080, data_offset: 589824
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x      6552 ./.././../DirTwo/FileOne
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /./.././../DirTwo/FileOne
+> Reading superblock
+> Print file info called
+> Path in pfi: ././DirTwo
+> ././DirTwo:
+> Zone count 1
+> entreis in zone 1024
+> Cur_pos: 589824, data_offset: 589824
+> drwxr-xr-x       256 .
+> Cur_pos: 589888, data_offset: 589824
+> drwxrwxrwx       256 ..
+> Cur_pos: 589952, data_offset: 589824
+> -rwxr-xr-x     20596 FileTwo
+> Cur_pos: 590016, data_offset: 589824
+> -rwxr-xr-x      6552 FileOne
+> Cur_pos: 590080, data_offset: 589824
+
+
+-----------------
+45) Permissions 777:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Permissions/777 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Permissions/777
+Reading superblock
+Print file info called
+Path in pfi: Permissions
+Permissions:
+Zone count 1
+entreis in zone 64
+Cur_pos: 4669440, data_offset: 4669440
+drwxr-xr-x       448 .
+Cur_pos: 4669504, data_offset: 4669440
+drwxrwxrwx       448 ..
+Cur_pos: 4669568, data_offset: 4669440
+-rwxrwxrwx       181 777
+Cur_pos: 4669632, data_offset: 4669440
+-rwxr-xr-x       181 755
+Cur_pos: 4669696, data_offset: 4669440
+-rwxr-x-wx       181 753
+Cur_pos: 4669760, data_offset: 4669440
+--wxr-xrwx       181 357
+Cur_pos: 4669824, data_offset: 4669440
+----------       181 000
+Cur_pos: 4669888, data_offset: 4669440
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rwxrwxrwx       181 Permissions/777
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Permissions/777
+> Reading superblock
+> Print file info called
+> Path in pfi: Permissions
+> Permissions:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 4669440, data_offset: 4669440
+> drwxr-xr-x       448 .
+> Cur_pos: 4669504, data_offset: 4669440
+> drwxrwxrwx       448 ..
+> Cur_pos: 4669568, data_offset: 4669440
+> -rwxrwxrwx       181 777
+> Cur_pos: 4669632, data_offset: 4669440
+> -rwxr-xr-x       181 755
+> Cur_pos: 4669696, data_offset: 4669440
+> -rwxr-x-wx       181 753
+> Cur_pos: 4669760, data_offset: 4669440
+> --wxr-xrwx       181 357
+> Cur_pos: 4669824, data_offset: 4669440
+> ----------       181 000
+> Cur_pos: 4669888, data_offset: 4669440
+
+
+-----------------
+46) Permissions 755:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Permissions/755 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Permissions/755
+Reading superblock
+Print file info called
+Path in pfi: Permissions
+Permissions:
+Zone count 1
+entreis in zone 64
+Cur_pos: 4669440, data_offset: 4669440
+drwxr-xr-x       448 .
+Cur_pos: 4669504, data_offset: 4669440
+drwxrwxrwx       448 ..
+Cur_pos: 4669568, data_offset: 4669440
+-rwxrwxrwx       181 777
+Cur_pos: 4669632, data_offset: 4669440
+-rwxr-xr-x       181 755
+Cur_pos: 4669696, data_offset: 4669440
+-rwxr-x-wx       181 753
+Cur_pos: 4669760, data_offset: 4669440
+--wxr-xrwx       181 357
+Cur_pos: 4669824, data_offset: 4669440
+----------       181 000
+Cur_pos: 4669888, data_offset: 4669440
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rwxr-xr-x       181 Permissions/755
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Permissions/755
+> Reading superblock
+> Print file info called
+> Path in pfi: Permissions
+> Permissions:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 4669440, data_offset: 4669440
+> drwxr-xr-x       448 .
+> Cur_pos: 4669504, data_offset: 4669440
+> drwxrwxrwx       448 ..
+> Cur_pos: 4669568, data_offset: 4669440
+> -rwxrwxrwx       181 777
+> Cur_pos: 4669632, data_offset: 4669440
+> -rwxr-xr-x       181 755
+> Cur_pos: 4669696, data_offset: 4669440
+> -rwxr-x-wx       181 753
+> Cur_pos: 4669760, data_offset: 4669440
+> --wxr-xrwx       181 357
+> Cur_pos: 4669824, data_offset: 4669440
+> ----------       181 000
+> Cur_pos: 4669888, data_offset: 4669440
+
+
+-----------------
+47) Permissions 753:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Permissions/753 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Permissions/753
+Reading superblock
+Print file info called
+Path in pfi: Permissions
+Permissions:
+Zone count 1
+entreis in zone 64
+Cur_pos: 4669440, data_offset: 4669440
+drwxr-xr-x       448 .
+Cur_pos: 4669504, data_offset: 4669440
+drwxrwxrwx       448 ..
+Cur_pos: 4669568, data_offset: 4669440
+-rwxrwxrwx       181 777
+Cur_pos: 4669632, data_offset: 4669440
+-rwxr-xr-x       181 755
+Cur_pos: 4669696, data_offset: 4669440
+-rwxr-x-wx       181 753
+Cur_pos: 4669760, data_offset: 4669440
+--wxr-xrwx       181 357
+Cur_pos: 4669824, data_offset: 4669440
+----------       181 000
+Cur_pos: 4669888, data_offset: 4669440
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< -rwxr-x-wx       181 Permissions/753
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Permissions/753
+> Reading superblock
+> Print file info called
+> Path in pfi: Permissions
+> Permissions:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 4669440, data_offset: 4669440
+> drwxr-xr-x       448 .
+> Cur_pos: 4669504, data_offset: 4669440
+> drwxrwxrwx       448 ..
+> Cur_pos: 4669568, data_offset: 4669440
+> -rwxrwxrwx       181 777
+> Cur_pos: 4669632, data_offset: 4669440
+> -rwxr-xr-x       181 755
+> Cur_pos: 4669696, data_offset: 4669440
+> -rwxr-x-wx       181 753
+> Cur_pos: 4669760, data_offset: 4669440
+> --wxr-xrwx       181 357
+> Cur_pos: 4669824, data_offset: 4669440
+> ----------       181 000
+> Cur_pos: 4669888, data_offset: 4669440
+
+
+-----------------
+48) Permissions 357:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Permissions/357 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Permissions/357
+Reading superblock
+Print file info called
+Path in pfi: Permissions
+Permissions:
+Zone count 1
+entreis in zone 64
+Cur_pos: 4669440, data_offset: 4669440
+drwxr-xr-x       448 .
+Cur_pos: 4669504, data_offset: 4669440
+drwxrwxrwx       448 ..
+Cur_pos: 4669568, data_offset: 4669440
+-rwxrwxrwx       181 777
+Cur_pos: 4669632, data_offset: 4669440
+-rwxr-xr-x       181 755
+Cur_pos: 4669696, data_offset: 4669440
+-rwxr-x-wx       181 753
+Cur_pos: 4669760, data_offset: 4669440
+--wxr-xrwx       181 357
+Cur_pos: 4669824, data_offset: 4669440
+----------       181 000
+Cur_pos: 4669888, data_offset: 4669440
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< --wxr-xrwx       181 Permissions/357
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Permissions/357
+> Reading superblock
+> Print file info called
+> Path in pfi: Permissions
+> Permissions:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 4669440, data_offset: 4669440
+> drwxr-xr-x       448 .
+> Cur_pos: 4669504, data_offset: 4669440
+> drwxrwxrwx       448 ..
+> Cur_pos: 4669568, data_offset: 4669440
+> -rwxrwxrwx       181 777
+> Cur_pos: 4669632, data_offset: 4669440
+> -rwxr-xr-x       181 755
+> Cur_pos: 4669696, data_offset: 4669440
+> -rwxr-x-wx       181 753
+> Cur_pos: 4669760, data_offset: 4669440
+> --wxr-xrwx       181 357
+> Cur_pos: 4669824, data_offset: 4669440
+> ----------       181 000
+> Cur_pos: 4669888, data_offset: 4669440
+
+
+-----------------
+49) Permissions 000:
+     minls /home/pn-cs453/Given/Asgn5/Images/Files /Permissions/000 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /Permissions/000
+Reading superblock
+Print file info called
+Path in pfi: Permissions
+Permissions:
+Zone count 1
+entreis in zone 64
+Cur_pos: 4669440, data_offset: 4669440
+drwxr-xr-x       448 .
+Cur_pos: 4669504, data_offset: 4669440
+drwxrwxrwx       448 ..
+Cur_pos: 4669568, data_offset: 4669440
+-rwxrwxrwx       181 777
+Cur_pos: 4669632, data_offset: 4669440
+-rwxr-xr-x       181 755
+Cur_pos: 4669696, data_offset: 4669440
+-rwxr-x-wx       181 753
+Cur_pos: 4669760, data_offset: 4669440
+--wxr-xrwx       181 357
+Cur_pos: 4669824, data_offset: 4669440
+----------       181 000
+Cur_pos: 4669888, data_offset: 4669440
+Diffs: ( < Reference > Testfile ):
+1c1,25
+< ----------       181 Permissions/000
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /Permissions/000
+> Reading superblock
+> Print file info called
+> Path in pfi: Permissions
+> Permissions:
+> Zone count 1
+> entreis in zone 64
+> Cur_pos: 4669440, data_offset: 4669440
+> drwxr-xr-x       448 .
+> Cur_pos: 4669504, data_offset: 4669440
+> drwxrwxrwx       448 ..
+> Cur_pos: 4669568, data_offset: 4669440
+> -rwxrwxrwx       181 777
+> Cur_pos: 4669632, data_offset: 4669440
+> -rwxr-xr-x       181 755
+> Cur_pos: 4669696, data_offset: 4669440
+> -rwxr-x-wx       181 753
+> Cur_pos: 4669760, data_offset: 4669440
+> --wxr-xrwx       181 357
+> Cur_pos: 4669824, data_offset: 4669440
+> ----------       181 000
+> Cur_pos: 4669888, data_offset: 4669440
+
+
+-----------------
+57) subpart., w/filename:
+     minget -p 0 -s 2 /home/pn-cs453/Given/Asgn5/Images/HardDisk /home/pnico/Message 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Path entry Message not found
+Failed to find path: home/Message
+
+
+-----------------
+66) subpart., w/filename:
+     minget -p 0 -s 2 /home/pn-cs453/Given/Asgn5/Images/HardDisk /home/pnico/Message /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Path entry Message not found
+Failed to find path: home/Message
+
+
+-----------------
+71) directories:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /DeepPaths/a/b/c/d/e/i/j/k/Files/Message 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Path entry b not found
+Failed to find path: DeepPaths/b/d/i/k/Message
+
+
+-----------------
+75) directories:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /DeepPaths/a/b/c/d/e/i/j/k/Files/Message /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Path entry b not found
+Failed to find path: DeepPaths/b/d/i/k/Message
+
+
+-----------------
+78) indirect directory (file):
+     minget /home/pn-cs453/Given/Asgn5/Images/BigIndirectDirs Level1/Level2/LastFile 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Path entry LastFile not found
+Failed to find path: Level1/LastFile
+
+
+-----------------
+79) indirect directory (file):
+     minget /home/pn-cs453/Given/Asgn5/Images/BigIndirectDirs Level1/Level2/LastFile /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Path entry LastFile not found
+Failed to find path: Level1/LastFile
+
+
+-----------------
+81) directories-ok file:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Deleted/File-10 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Error: Deleted is a directory.
+
+
+-----------------
+84) directories-ok file:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Deleted/File-10 /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+Submitted program's stderr:
+Error: Deleted is a directory.
+
+
+-----------------
+86) 1k blocks. dir.:
+     minls /home/pn-cs453/Given/Asgn5/Images/SmallBlocks--1k 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 16
+Cur_pos: 50176, data_offset: 50176
+drwxrwxrwx       256 .
+Cur_pos: 50240, data_offset: 50176
+drwxrwxrwx       256 ..
+Cur_pos: 50304, data_offset: 50176
+drwxr-xr-x       256 DirOne
+Cur_pos: 50368, data_offset: 50176
+drwxr-xr-x       256 DirTwo
+Cur_pos: 50432, data_offset: 50176
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 16
+> Cur_pos: 50176, data_offset: 50176
+2a13
+> Cur_pos: 50240, data_offset: 50176
+3a15
+> Cur_pos: 50304, data_offset: 50176
+4a17
+> Cur_pos: 50368, data_offset: 50176
+5a19
+> Cur_pos: 50432, data_offset: 50176
+
+
+-----------------
+87) 1k blocks. file.:
+     minls /home/pn-cs453/Given/Asgn5/Images/SmallBlocks--1k DirTwo/FileTwo  
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: DirTwo/FileTwo
+Reading superblock
+Print file info called
+Path in pfi: DirTwo
+DirTwo:
+Zone count 1
+entreis in zone 16
+Cur_pos: 52224, data_offset: 52224
+drwxr-xr-x       256 .
+Cur_pos: 52288, data_offset: 52224
+drwxrwxrwx       256 ..
+Cur_pos: 52352, data_offset: 52224
+-rwxr-xr-x     20596 FileTwo
+Cur_pos: 52416, data_offset: 52224
+-rwxr-xr-x      6552 FileOne
+Cur_pos: 52480, data_offset: 52224
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x     20596 DirTwo/FileTwo
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: DirTwo/FileTwo
+> Reading superblock
+> Print file info called
+> Path in pfi: DirTwo
+> DirTwo:
+> Zone count 1
+> entreis in zone 16
+> Cur_pos: 52224, data_offset: 52224
+> drwxr-xr-x       256 .
+> Cur_pos: 52288, data_offset: 52224
+> drwxrwxrwx       256 ..
+> Cur_pos: 52352, data_offset: 52224
+> -rwxr-xr-x     20596 FileTwo
+> Cur_pos: 52416, data_offset: 52224
+> -rwxr-xr-x      6552 FileOne
+> Cur_pos: 52480, data_offset: 52224
+
+
+-----------------
+88) 16k zones. dir.:
+     minls /home/pn-cs453/Given/Asgn5/Images/BigZones-16k 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 256
+Cur_pos: 81920, data_offset: 81920
+drwxrwxrwx       256 .
+Cur_pos: 81984, data_offset: 81920
+drwxrwxrwx       256 ..
+Cur_pos: 82048, data_offset: 81920
+drwxr-xr-x       256 DirOne
+Cur_pos: 82112, data_offset: 81920
+drwxr-xr-x       256 DirTwo
+Cur_pos: 82176, data_offset: 81920
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 256
+> Cur_pos: 81920, data_offset: 81920
+2a13
+> Cur_pos: 81984, data_offset: 81920
+3a15
+> Cur_pos: 82048, data_offset: 81920
+4a17
+> Cur_pos: 82112, data_offset: 81920
+5a19
+> Cur_pos: 82176, data_offset: 81920
+
+
+-----------------
+89) 16k zones. file.:
+     minls /home/pn-cs453/Given/Asgn5/Images/BigZones-16k /DirOne/FileTwo 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /DirOne/FileTwo
+Reading superblock
+Print file info called
+Path in pfi: DirOne
+DirOne:
+Zone count 1
+entreis in zone 256
+Cur_pos: 98304, data_offset: 98304
+drwxr-xr-x       256 .
+Cur_pos: 98368, data_offset: 98304
+drwxrwxrwx       256 ..
+Cur_pos: 98432, data_offset: 98304
+-rwxr-xr-x       181 FileOne
+Cur_pos: 98496, data_offset: 98304
+-rwxr-xr-x       181 FileTwo
+Cur_pos: 98560, data_offset: 98304
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x       181 DirOne/FileTwo
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /DirOne/FileTwo
+> Reading superblock
+> Print file info called
+> Path in pfi: DirOne
+> DirOne:
+> Zone count 1
+> entreis in zone 256
+> Cur_pos: 98304, data_offset: 98304
+> drwxr-xr-x       256 .
+> Cur_pos: 98368, data_offset: 98304
+> drwxrwxrwx       256 ..
+> Cur_pos: 98432, data_offset: 98304
+> -rwxr-xr-x       181 FileOne
+> Cur_pos: 98496, data_offset: 98304
+> -rwxr-xr-x       181 FileTwo
+> Cur_pos: 98560, data_offset: 98304
+
+
+-----------------
+90) 64k zones. dir:
+     minls /home/pn-cs453/Given/Asgn5/Images/ReallyBigZones-64k 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 2
+Setting path
+Path: (null)
+Reading superblock
+Print file info called
+Path in pfi: /
+/:
+Zone count 1
+entreis in zone 1024
+Cur_pos: 327680, data_offset: 327680
+drwxrwxrwx       256 .
+Cur_pos: 327744, data_offset: 327680
+drwxrwxrwx       256 ..
+Cur_pos: 327808, data_offset: 327680
+drwxr-xr-x       256 DirOne
+Cur_pos: 327872, data_offset: 327680
+drwxr-xr-x       256 DirTwo
+Cur_pos: 327936, data_offset: 327680
+Diffs: ( < Reference > Testfile ):
+0a1,7
+> Inside process args
+> optind: 2, argc: 2
+> Setting path
+> Path: (null)
+> Reading superblock
+> Print file info called
+> Path in pfi: /
+1a9,11
+> Zone count 1
+> entreis in zone 1024
+> Cur_pos: 327680, data_offset: 327680
+2a13
+> Cur_pos: 327744, data_offset: 327680
+3a15
+> Cur_pos: 327808, data_offset: 327680
+4a17
+> Cur_pos: 327872, data_offset: 327680
+5a19
+> Cur_pos: 327936, data_offset: 327680
+
+
+-----------------
+91) 64k zones. file:
+     minls /home/pn-cs453/Given/Asgn5/Images/ReallyBigZones-64k DirTwo/FileOne 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: DirTwo/FileOne
+Reading superblock
+Print file info called
+Path in pfi: DirTwo
+DirTwo:
+Zone count 1
+entreis in zone 1024
+Cur_pos: 589824, data_offset: 589824
+drwxr-xr-x       256 .
+Cur_pos: 589888, data_offset: 589824
+drwxrwxrwx       256 ..
+Cur_pos: 589952, data_offset: 589824
+-rwxr-xr-x     20596 FileTwo
+Cur_pos: 590016, data_offset: 589824
+-rwxr-xr-x      6552 FileOne
+Cur_pos: 590080, data_offset: 589824
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x      6552 DirTwo/FileOne
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: DirTwo/FileOne
+> Reading superblock
+> Print file info called
+> Path in pfi: DirTwo
+> DirTwo:
+> Zone count 1
+> entreis in zone 1024
+> Cur_pos: 589824, data_offset: 589824
+> drwxr-xr-x       256 .
+> Cur_pos: 589888, data_offset: 589824
+> drwxrwxrwx       256 ..
+> Cur_pos: 589952, data_offset: 589824
+> -rwxr-xr-x     20596 FileTwo
+> Cur_pos: 590016, data_offset: 589824
+> -rwxr-xr-x      6552 FileOne
+> Cur_pos: 590080, data_offset: 589824
+
+
+-----------------
+92) 64k zones. longpath:
+     minls /home/pn-cs453/Given/Asgn5/Images/ReallyBigZones-64k /./.././../DirTwo/FileOne 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: /./.././../DirTwo/FileOne
+Reading superblock
+Print file info called
+Path in pfi: ././DirTwo
+././DirTwo:
+Zone count 1
+entreis in zone 1024
+Cur_pos: 589824, data_offset: 589824
+drwxr-xr-x       256 .
+Cur_pos: 589888, data_offset: 589824
+drwxrwxrwx       256 ..
+Cur_pos: 589952, data_offset: 589824
+-rwxr-xr-x     20596 FileTwo
+Cur_pos: 590016, data_offset: 589824
+-rwxr-xr-x      6552 FileOne
+Cur_pos: 590080, data_offset: 589824
+Diffs: ( < Reference > Testfile ):
+1c1,19
+< -rwxr-xr-x      6552 ./.././../DirTwo/FileOne
+---
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: /./.././../DirTwo/FileOne
+> Reading superblock
+> Print file info called
+> Path in pfi: ././DirTwo
+> ././DirTwo:
+> Zone count 1
+> entreis in zone 1024
+> Cur_pos: 589824, data_offset: 589824
+> drwxr-xr-x       256 .
+> Cur_pos: 589888, data_offset: 589824
+> drwxrwxrwx       256 ..
+> Cur_pos: 589952, data_offset: 589824
+> -rwxr-xr-x     20596 FileTwo
+> Cur_pos: 590016, data_offset: 589824
+> -rwxr-xr-x      6552 FileOne
+> Cur_pos: 590080, data_offset: 589824
+
+
+-----------------
+93) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0000_Zones 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+94) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0000_Zone 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+95) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0007_Zones 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+96) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0010_Zones 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+97) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/1032_Zones 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+98) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0000_Zones /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+99) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0000_Zone /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+100) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0007_Zones /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+101) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/0010_Zones /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+102) Files size tests:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Files/1032_Zones /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Files is a directory.
+
+
+-----------------
+103) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/nohole         /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+104) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/direct         /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+105) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/into-indirect  /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+106) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/whole-indirect /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+107) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/double         /dev/stdout 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+108) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/nohole 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+109) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/direct 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+110) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/into-indirect 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+111) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/whole-indirect 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+112) Reading files with holes:
+     minget /home/pn-cs453/Given/Asgn5/Images/Files /Holes/double 
+-----------------
+Program exited with bad status: 1
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Submitted program's stderr:
+ --- Output limited to 10 lines. (There would be too much.) ---
+Error: Holes is a directory.
+
+
+-----------------
+119) minls:  trying to traverse a file:
+     minls /home/pn-cs453/Given/Asgn5/Images/WeirdStuff NotADir/This_file_does_not_exist 
+-----------------
+ This test was expected to fail, but reports success.
+ Perhaps a bad exit status or no error message?
+
+
+-----------------
+120) minget: trying to traverse a file:
+     minget /home/pn-cs453/Given/Asgn5/Images/WeirdStuff NotADir/This_file_does_not_exist /dev/stdout 
+-----------------
+ This test was expected to fail, but reports success.
+ Perhaps a bad exit status or no error message?
+
+
+-----------------
+121) minget: trying to get a symlink:
+     minget /home/pn-cs453/Given/Asgn5/Images/WeirdStuff SymLink 
+-----------------
+ This test was expected to fail, but reports success.
+ Perhaps a bad exit status or no error message?
+
+
+-----------------
+123) minget: indirect block vs. zone:
+     minget /home/pn-cs453/Given/Asgn5/Images/indirectblock tryme /dev/stdout 
+-----------------
+Program exited with bad status: 255
+
+Test program output:
+ --- Output limited to 10 lines. (There would be too much.) ---
+*** Error in `./minget': double free or corruption (!prev): 0x0000000001819590 ***^M
+======= Backtrace: =========^M
+/lib64/libc.so.6(+0x7f474)[0x7ffb522d2474]^M
+/lib64/libc.so.6(+0x84770)[0x7ffb522d7770]^M
+/lib64/libc.so.6(realloc+0x1d2)[0x7ffb522d8e12]^M
+./minget[0x401114]^M
+./minget[0x4018d2]^M
+./minget[0x401b84]^M
+./minget[0x400d31]^M
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x7ffb52275555]^M
+/home/pnico/bin/iolimit.Linux.x86_64: output line limit (10) exceeded.
+
+
+-----------------
+124) minls: long file name:
+     minls /home/pn-cs453/Given/Asgn5/Images/indirectblock ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBoo 
+-----------------
+Test program output:
+Inside process args
+optind: 2, argc: 3
+Setting path
+Path: ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBoo
+Reading superblock
+Print file info called
+Path in pfi: ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBoo
+Permissions: -1248563344
+-rw-r--r--        15 ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBoo
+Diffs: ( < Reference > Testfile ):
+0a1,8
+> Inside process args
+> optind: 2, argc: 3
+> Setting path
+> Path: ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBoo
+> Reading superblock
+> Print file info called
+> Path in pfi: ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBoo
+> Permissions: -1248563344
+FAILED.
+
+
