@@ -180,6 +180,36 @@ int process_args(int argc,
     return 0;
 }
 
+char *get_path(int optind, int argc, char *argv[]) {
+    char *path = NULL;
+    if (optind <= argc) {
+        if(DEBUG){
+            printf("Setting path\n");
+            fflush(NULL);
+        }
+        path = argv[optind];
+    }
+
+    if(DEBUG){
+        printf("Path: %s\n", path);
+        fflush(NULL);
+    }
+
+    char *canonical = malloc(1024);
+    if (!canonical) {
+        perror("malloc failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (!path) {
+        strncpy(canonical, "/", 1024);
+    } else {
+        canonicalize_path(path, canonical, 1024);
+    }
+    
+    return canonical;
+}
+
 int main(int argc, char *argv[]) {
     int verbose = 0;
     int partition = -1;
@@ -215,6 +245,7 @@ int main(int argc, char *argv[]) {
     }
     /* path is optional */
     const char *path = NULL;
+    // char *canonical = get_path(argc, optind, argv);
     if (optind <= argc) {
         if(DEBUG){
             printf("Setting path\n");

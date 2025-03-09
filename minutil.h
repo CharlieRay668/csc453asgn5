@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define PARTITION_OFFSET 0x1BE
 #define PARTITION_TYPE 0x81

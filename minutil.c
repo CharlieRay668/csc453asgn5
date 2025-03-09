@@ -114,8 +114,7 @@ void canonicalize_path(char *in, char *out, size_t outsize) {
         memcpy(out + written, token, len);
         written += len;
         token = strtok(NULL, delim);
-
-        token = strtok(NULL, delim);
+        
         if (token != NULL) {
             if (written + 1 >= outsize) break;
             out[written] = '/';
