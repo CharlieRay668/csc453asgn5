@@ -5,8 +5,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-#define DEBUG 0
-
 #define PARTITION_OFFSET 0x1BE
 #define PARTITION_TYPE 0x81
 #define VALID_BIT_ONE 0x55
@@ -18,6 +16,7 @@
 #define DIRECT_ZONES 7
 #define MAX_NAME_LENGTH 60
 #define SECTOR_SIZE 512
+#define CHECK_BIT_ADDR 510
 
 #define FILE_TYPE       0170000
 #define REGULAR_FILE    0100000
@@ -82,19 +81,21 @@ typedef struct __attribute__ ((__packed__)) dir_entry {
     unsigned char name[60];
 } dir_entry;
 
-void debug(const char *format, ...);
 void get_mode_string(uint16_t mode, char *out);
 void usage(const char *progname);
 void print_superblock(superblock *sb);
+void print_inode(inode *in);
+void print_partition_table(partition_table *pt);
 void compute_fs_offsets(superblock *sb, long *inode_bitmap_start, 
 long *zone_bitmap_start, long *inode_table_start, long *data_zone_start);
-void canonicalize_path(char *in, char *out, size_t outsize);
+void clean_path(char *in, char *out, size_t outsize);
 int read_partition_table(FILE *fp, long base_offset, partition_table *table);
 
-int find_inode_of_path(FILE *fp, 
+int find_inode(FILE *fp, 
                     superblock *sb, 
                     char *path, 
-                    long partition_offset);
+                    long partition_offset,
+                    int verbose);
 
 int collect_zones(FILE *fp,
                 superblock *sb,
@@ -108,7 +109,7 @@ int follow_indirect(FILE* fp,
                 uint32_t zone_num, 
                 long partition_offset,
                 size_t *count,
-                int capacity,
+                size_t *capacity,
                 uint32_t **zones);
 
 int seek_to_zone(FILE* fp, 
@@ -116,7 +117,7 @@ int seek_to_zone(FILE* fp,
     long zone_num, 
     long partition_offset);
 
-void ensure_capacity(size_t needed, size_t capacity, uint32_t *zones);
+int ensure_capacity(size_t needed, size_t *capacity, uint32_t **zones);
 
 int read_inode(FILE *fp, 
             superblock *sb, 
@@ -124,13 +125,14 @@ int read_inode(FILE *fp,
             inode *in, 
             long partition_offset);
 
-read_superblock(FILE *fp, long partition_start, superblock *sb);
+int read_superblock(FILE *fp, long partition_start, superblock *sb);
 
 long compute_partition_offset(const partition_table *pentry);
 
 long get_partition_offset(int partition,
                             FILE *fp,
-                            int subpart);
+                            int subpart,
+                            int verbose);
 
 int process_args(int argc, 
                 char *argv[], 

@@ -1,18 +1,7 @@
 #include <stdio.h>
 #include "minutil.h"
-#define DEBUG 0
 
-void debug(const char *format, ...) {
-    if (DEBUG) {
-        va_list args;
-        va_start(args, format);
-        vprintf(format, args);
-        va_end(args);
-        fflush(NULL);
-    }
-}
-
-
+/* Get the premission string of a file */
 void get_mode_string(uint16_t mode, char *out){
     /* first character is a d if file is a directory, - otherwise */
     if((mode & FILE_TYPE) == DIRECTORY){
@@ -34,6 +23,7 @@ void get_mode_string(uint16_t mode, char *out){
     out[10] = '\0';
 }
 
+/* Helper to output minget and minls usage */
 void usage(const char *progname) {
     fprintf(stderr, 
             "Usage: %s [ -v ] [ -p num [ -s num ] ] imagefile [ path ]\n", 
@@ -51,6 +41,7 @@ void usage(const char *progname) {
             "  -h      --- help; print this usage message\n");
 }
 
+/* Prints out the superblock info for verbosity */
 void print_superblock(superblock *sb) {
     fprintf(stderr, "Superblock Contents:\n");
     fprintf(stderr, "  ninodes        = %u\n",   sb->ninodes);
@@ -65,6 +56,45 @@ void print_superblock(superblock *sb) {
     fprintf(stderr, "  subversion     = %u\n\n", sb->subversion);
 }
 
+void print_inode(inode *in) {
+    fprintf(stderr, "Inode Contents:\n");
+    fprintf(stderr, "  mode           = 0x%04x\n", in->mode);
+    fprintf(stderr, "  links          = %u\n", in->links);
+    fprintf(stderr, "  uid            = %u\n", in->uid);
+    fprintf(stderr, "  gid            = %u\n", in->gid);
+    fprintf(stderr, "  size           = %u\n", in->size);
+    fprintf(stderr, "  atime          = %d\n", in->atime);
+    fprintf(stderr, "  mtime          = %d\n", in->mtime);
+    fprintf(stderr, "  ctime          = %d\n", in->ctime);
+
+    fprintf(stderr, "  zone:\n");
+    int i;
+    for (i = 0; i < DIRECT_ZONES; i++) {
+        fprintf(stderr, "    zone[%d]       = %u\n", i, in->zone[i]);
+    }
+
+    fprintf(stderr, "  indirect       = %u\n", in->indirect);
+    fprintf(stderr, "  two_indirect   = %u\n", in->two_indirect);
+}
+
+void print_partition_table(partition_table *pt) {
+    fprintf(stderr, "Partition Table Contents:\n");
+    fprintf(stderr, "  bootind        = 0x%02x\n", pt->bootind);
+    fprintf(stderr, "  startd_head    = %u\n", pt->startd_head);
+    fprintf(stderr, "  start_sec      = %u\n", pt->start_sec);
+    fprintf(stderr, "  start_cyl      = %u\n", pt->start_cyl);
+    fprintf(stderr, "  type           = 0x%02x\n", pt->type);
+    fprintf(stderr, "  end_head       = %u\n", pt->end_head);
+    fprintf(stderr, "  end_sec        = %u\n", pt->end_sec);
+    fprintf(stderr, "  end_cyl        = %u\n", pt->end_cyl);
+    fprintf(stderr, "  lFirst         = %u\n", pt->lFirst);
+    fprintf(stderr, "  size           = %u\n\n", pt->size);
+}
+
+
+/* Computes the offsets into the partition/subpartions
+of the filesystem. Finds where the different tables and bitmap
+and data starts. */
 void compute_fs_offsets(superblock *sb, long *inode_bitmap_start, 
     long *zone_bitmap_start, long *inode_table_start, long *data_zone_start){
     long block_size = sb->blocksize;
@@ -88,14 +118,16 @@ void compute_fs_offsets(superblock *sb, long *inode_bitmap_start,
     *data_zone_start = *inode_table_start + (inode_blocks * block_size);
 }
 
-void canonicalize_path(char *in, char *out, size_t outsize) {
+/* Cleans a path by removing excess slashes, etc. */
+void clean_path(char *in, char *out, size_t outsize) {
+    /* If we don't have a path, 
+    use / as default path */
     if (!in || !*in) {
-        // Empty => root "/"
         strncpy(out, "/", outsize);
         out[outsize - 1] = '\0';
         return;
     }
-    // We'll build an output in a buffer
+    /* Deliminate on slashes */
     char delim[] = "/";
     char *token;
     char *ptr = out;
@@ -103,17 +135,17 @@ void canonicalize_path(char *in, char *out, size_t outsize) {
 
     *ptr++ = '/';
     written++;
-
+    /* use strtok to handle most of it */
     token = strtok(in, delim);
     while(token != NULL){
         size_t len = strlen(token);
-
+        /* set a limit on the size of the path */
         if (written + len + 1 >= outsize) {
             perror("Path longer than 1024 characters\n");
             out[written] = '\0';
             break;
         }
-
+        /* save the path info. */
         memcpy(out + written, token, len);
         written += len;
         token = strtok(NULL, delim);
@@ -136,22 +168,24 @@ int read_partition_table(FILE *fp, long base_offset, partition_table *table) {
         perror("Failed to read partition_table\n");
         fflush(NULL);
     }
-    /**/
     unsigned char valid_bits[2];
     /* move to the validation bits at 510 & 511 */
-    if(fseek(fp, 510, SEEK_SET)){
+    if(fseek(fp, CHECK_BIT_ADDR, SEEK_SET)){
         perror("Failed to seek to signature bits\n");
         fflush(NULL);
     }
+    /* Read the two validation bits in*/
     if(fread(valid_bits, 1, 2, fp) != 2){
         perror("Failed to read signature bits\n");
         fflush(NULL);
     }
-    if (valid_bits[0] != 0x55 || valid_bits[1] != 0xAA) {
+    /* check if they're valid */
+    if (valid_bits[0] != VALID_BIT_ONE || valid_bits[1] != VALID_BIT_TWO) {
         perror("Invalid signature bits");
         return 1;
     }
-    if (table->type != 0x81){
+    /* Make sure we're a MINIX partiton... */
+    if (table->type != PARTITION_TYPE){
         perror("Invalid partition table type");
         return 1;
     }
@@ -164,6 +198,7 @@ long compute_partition_offset(const partition_table *pentry) {
     return (long)pentry->lFirst * SECTOR_SIZE;
 }
 
+/* reads in the superblock at a given partition start */
 int read_superblock(FILE *fp, long partition_start, superblock *sb) {
     /* "the superblock is always found at offset 1024, regardless
     of the filesystem's block size." */
@@ -187,6 +222,7 @@ int read_superblock(FILE *fp, long partition_start, superblock *sb) {
     return 0;
 }
 
+/* Reads the inode of a block */
 int read_inode(FILE *fp, 
             superblock *sb, 
             int inode_num, 
@@ -196,13 +232,16 @@ int read_inode(FILE *fp,
         zone_bitmap_offset, 
         inode_table_offset, 
         data_offset;
+    /* get the offsets needed for this file */
     compute_fs_offsets(sb, 
                     &inode_bitmap_offset,
                     &zone_bitmap_offset, 
                     &inode_table_offset, 
                     &data_offset);
 
-                    
+    /* if we are asking for node 0
+    or more than what the superblock says we hav 
+    fail */          
     if(inode_num < 1 || inode_num > (int)sb->ninodes){
         fprintf(stderr, "Invalid number of inodes requested: %d\n", 
             inode_num);
@@ -232,20 +271,30 @@ int read_inode(FILE *fp,
     return 0;    
 }
 
-void ensure_capacity(size_t needed, size_t capacity, uint32_t *zones) {
-    if (needed <= capacity) return;
-    while (capacity < needed) {
-        capacity *= 2;
+/* Helper function to make sure our list of zones
+can actually hold all of the information */
+int ensure_capacity(size_t needed, size_t *capacity, uint32_t **zones) {
+    /* If we don't need to expand, dont*/
+    if (needed <= *capacity) {
+        return 0;
     }
-    uint32_t *tmp = realloc(zones, capacity * sizeof(uint32_t));
+    /* otherwise double */
+    while (*capacity < needed) {
+        *capacity *= 2;
+    }
+    /* realloc to copy over the information*/
+    uint32_t *tmp = realloc(*zones, *capacity * sizeof(uint32_t));
     if (tmp == NULL) {
-        free(zones);
-        zones = NULL;
-        capacity = 0;
-    } else {
-        zones = tmp;
+        /* if realloc failed, free it and fail*/
+        free(*zones);
+        *zones = NULL;
+        return 1;
     }
+    /* swap */
+    *zones = tmp;
+    return 0;
 }
+
 
 /* seek to a zone */
 int seek_to_zone(FILE* fp, 
@@ -263,21 +312,31 @@ int seek_to_zone(FILE* fp,
     return data_offset;
 }
 
-
+/* follow a indirect link to get more zones */
 int follow_indirect(FILE* fp, 
                 superblock *sb, 
                 uint32_t zone_num, 
                 long partition_offset,
                 size_t *count,
-                int capacity,
+                size_t *capacity,
                 uint32_t **zones) {
-    debug("follow_indirect called\n");
-    if (zone_num == 0) {
-        return 0;
-    }
-    seek_to_zone(fp, sb, zone_num, partition_offset);
     /* The number of indirect blocks we have */
     int num_ptrs = sb->blocksize / sizeof(uint32_t);
+    /* if we get a 0, its probably a hole*/
+    if (zone_num == 0) {
+        int i;
+        /* loop over all the number of blocks */
+        for (i = 0; i < num_ptrs; i++) {
+            if (ensure_capacity((*count) + 1, capacity, zones)) {
+                return 1;
+            }
+            /* add a zero*/
+            (*zones)[(*count)++] = 0;
+        }
+        return 0;
+    }
+    /* go to the next zone */
+    seek_to_zone(fp, sb, zone_num, partition_offset);
     /* create a buffer to hold them */
     uint32_t *buf = (uint32_t *)calloc(num_ptrs, sizeof(uint32_t));
     if (buf == NULL) {
@@ -290,132 +349,109 @@ int follow_indirect(FILE* fp,
         free(buf);
         return 1;
     }
-    debug("made it past read\n");
     /* Gather non-zero zone references into 'zones'. */
     int i;
     for (i = 0; i < num_ptrs; i++) {
-        if (buf[i] != 0) {
-            debug("trying to ensure capacity\n");
-            ensure_capacity((*count) + 1, capacity, *zones);
-            debug("past ensuring capacity\n");
-            if (*zones == NULL) {
-                free(buf);
-                return 1;
-            }
-            debug("zoninging it mark im zoning it so hard\n");
-            debug("value of count is %d\n", *count);
-            (*zones)[(*count)++] = buf[i];
-            debug("past freakbob\n");
+        if (ensure_capacity((*count) + 1, capacity, zones)) {
+            free(buf);
+            return 1;
         }
+        (*zones)[(*count)++] = buf[i];
     }
 
     free(buf);
-    if (DEBUG) {
-        printf("made it past follow_indirect");
-        fflush(NULL);
-    }
     return 0;
 }   
 
-
+/* Gather all the zones together, so we can accurelty
+copy/list them */
 int collect_zones(FILE *fp,
-                superblock *sb,
-                const inode *in,
-                long partition_offset,
-                uint32_t **out_zones,
-                int *out_count) {
-                    
+                  superblock *sb,
+                  const inode *in,
+                  long partition_offset,
+                  uint32_t **out_zones,
+                  int *out_count) {
+    /* We start with enough room to hold 32 zones */
     size_t capacity = 32;
     size_t count = 0;
-    uint32_t *zones = (uint32_t *)malloc(capacity * sizeof(uint32_t));
+    uint32_t *zones = malloc(capacity * sizeof(uint32_t));
     if (zones == NULL) {
-        perror("malloc\n");
+        perror("malloc");
         return 1;
     }
 
-    /* go overr all the direct zones. */
-    int i;
-    for (i = 0; i < 7; i++) {
-        if (in->zone[i] != 0) {
-            ensure_capacity(count + 1, capacity, zones);
-            if (zones == NULL) { 
-                /* Realloc fail check */
-                return 1;
-            }
-            zones[count++] = in->zone[i];
+    /* Compute zone size and number of zones needed from file size */
+    long zone_size = (long)sb->blocksize << sb->log_zone_size;
+    uint32_t total_zones_needed = (in->size + zone_size - 1) / zone_size;
+
+    /* First 7 are the direct zones */
+    uint32_t direct_zones = 7;
+    unsigned int i;
+    for (i = 0; i < direct_zones && count < total_zones_needed; i++) {
+        if (ensure_capacity(count + 1, &capacity, &zones)) {
+            free(zones);
+            return 1;
         }
-    }
-    if (DEBUG) {
-        printf("count after just the direct zones %d\n", count);
-        fflush(NULL);
+        zones[count++] = in->zone[i];
     }
 
-    if (in->indirect != 0) {
+    /* If the file requires more than 7 zones, process the indirect block.
+       Even if in->indirect is 0 call follow_indirect so that it
+       adds a full indirect block’s worth of zeros. */
+    uint32_t num_indirect = sb->blocksize / sizeof(uint32_t);
+    if (total_zones_needed > direct_zones) {
         if (follow_indirect(fp, 
-                            sb, 
-                            in->indirect, 
+                            sb, in->indirect, 
                             partition_offset, 
-                            &count,
-                            capacity,
-                            &zones) != 0) {
+                            &count, &capacity, &zones)) {
             free(zones);
             return 1;
         }
     }
 
-    
-    if (in->two_indirect != 0) {
+    /* Process double-indirect block if needed */
+    if (total_zones_needed > (direct_zones + num_indirect)) {
+        /* Read the double indirect block */
         seek_to_zone(fp, sb, in->two_indirect, partition_offset);
-
-        /* Creat a buffer to hold the indirect blocks*/
-        size_t num_ptrs = sb->blocksize / sizeof(uint32_t);
-        uint32_t *buf = (uint32_t *)calloc(num_ptrs, sizeof(uint32_t));
-        if (!buf) {
+        uint32_t *buf = calloc(num_indirect, sizeof(uint32_t));
+        if (buf == NULL) {
             perror("calloc");
             free(zones);
             return 1;
         }
-
-        if (fread(buf, sizeof(uint32_t), num_ptrs, fp) != num_ptrs) {
+        if (fread(buf, sizeof(uint32_t), num_indirect, fp) 
+                != (size_t)num_indirect) {
             perror("fread");
             free(buf);
             free(zones);
             return 1;
         }
-
-        /* For each zone reference in this block, 
-        read that single-indirect block. */
-        size_t j;
-        for (j = 0; j < num_ptrs; j++) {
-            if (buf[j] != 0) {
-                if (follow_indirect(fp, sb, buf[j], 
-                    partition_offset, 
-                    &count,
-                    capacity,
-                    &zones) != 0) {
-                    free(buf);
-                    free(zones);
-                    return 1;
-                }
+        /* For each pointer in the double-indirect block, 
+            always call follow_indirect */
+        unsigned int j;
+        for (j = 0; j < num_indirect && count < total_zones_needed; j++) {
+            if (follow_indirect(fp, sb, buf[j], 
+                    partition_offset, &count, &capacity, &zones)) {
+                free(buf);
+                free(zones);
+                return 1;
             }
         }
         free(buf);
     }
+
     *out_zones = zones;
     *out_count = count;
     return 0;
 }
 
 
-int find_inode_of_path(FILE *fp, 
+/* find the inode of a file */
+int find_inode(FILE *fp, 
                     superblock *sb, 
                     char *path, 
-                    long partition_offset) {
-    if (DEBUG) {
-        printf("Find inode of path called\n");
-        printf("Path in fiop: %s\n", path);
-        fflush(NULL);
-    }
+                    long partition_offset,
+                    int verbose) {
     int curr_inode = 1; /* Root is inode = 1*/
     if (strcmp(path, "/") == 0) {
         /* if we are just / then we are root*/
@@ -447,6 +483,10 @@ int find_inode_of_path(FILE *fp,
         /* read the current inode info */
         read_inode(fp, sb, curr_inode, in, partition_offset);
 
+        if(verbose){
+            print_inode(in);
+        }
+
         if ((in->mode & FILE_TYPE) != DIRECTORY) {
             /* Only deal with directories for now */
             fprintf(stderr, "Name %s is not a directory\n", name);
@@ -461,14 +501,11 @@ int find_inode_of_path(FILE *fp,
         int found = 0;
         uint32_t *zones = NULL;
         int zone_count = 0;
+        /* get all the zones corresponding to the file */
         if (collect_zones(fp, sb, in, partition_offset, &zones, &zone_count)) {
             perror("collect_zones\n");
             free(in);
             return -1;
-        }
-        if (DEBUG) {
-            printf("Zone count %d\n", zone_count);
-            fflush(NULL);
         }
         int i;
         for (i = 0; i < zone_count; i++){
@@ -489,6 +526,9 @@ int find_inode_of_path(FILE *fp,
                 continue;
             }
             long data_offset = seek_to_zone(fp, sb, zone_num, partition_offset);
+            if (data_offset < 0) {
+                continue;
+            }
             /* the total number of entries we could have */
             int max_entries = (int)(zone_size / DIR_SIZE);
             int j;
@@ -525,6 +565,8 @@ int find_inode_of_path(FILE *fp,
     return curr_inode;
 }
 
+/* Handle the command line arguments
+for minls and minget */
 int process_args(int argc, 
                 char *argv[], 
                 int *verbose, 
@@ -533,10 +575,6 @@ int process_args(int argc,
                 int *arg_index) {
     /* Handle user command line arguments */
     int opt;
-    if (DEBUG) {
-        printf("Inside process args\n");
-        fflush(NULL);
-    }   
     while ((opt = getopt(argc, argv, "hvp:s:")) != -1) {
         switch (opt) {
             case 'h':
@@ -567,37 +605,40 @@ int process_args(int argc,
     return 0;
 }
 
+/* calculate the partition offset for
+a given partition and subpartition index */
 long get_partition_offset(int partition,
                             FILE *fp,
-                            int subpart) {
+                            int subpart,
+                            int verbose) {
     /* if we have a valid partition to grab (non-negative) */
     long partition_offset = 0;
     if (partition >= 0) {
         partition_table head[4];
         /* read the tables in */
         if(read_partition_table(fp, 0, head) != 0) {
-            fclose(fp);
-            return 1;
+            perror("unable to read partitoin tables");
+            return -1;
+        }
+        if(verbose){
+            print_partition_table(head);
         }
         /* We only support 4 partitions, */
         if (partition < 0 || partition > 3) {
             perror("Invalid partition index");
-            fclose(fp);
-            return 1;
+            return -1;
         }
         partition_offset = compute_partition_offset(&head[partition]);
         /* handle sub partitions */
         if (subpart >= 0) {
             partition_table subs[4];
             if (read_partition_table(fp, partition_offset, subs) != 0) {
-                fclose(fp);
-                return 1;
+                return -1;
             }
             /* again we support only 4 subpartitoins*/
             if (subpart < 0 || subpart > 3) {
                 fprintf(stderr, "Invalid subpartition index %d\n", subpart);
-                fclose(fp);
-                return 1;
+                return -1;
             }
             partition_offset = compute_partition_offset(&subs[subpart]);
         }

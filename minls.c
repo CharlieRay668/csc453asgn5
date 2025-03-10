@@ -5,11 +5,6 @@ void print_file_info(FILE *fp,
                 int inode_num,
                 char *path, 
                 long partition_offset){
-    if (DEBUG) {
-        printf("Print file info called\n");
-        printf("Path in pfi: %s\n", path);
-        fflush(NULL);
-    }
     inode *in = malloc(sizeof(inode));
     
     /* read the inode_num into in */
@@ -19,7 +14,7 @@ void print_file_info(FILE *fp,
         return;
     }
 
-    /*get the permissions in a printable form*/
+    /* get the permissions in a printable form */
     char permissions[11];
     get_mode_string(in->mode, permissions);
 
@@ -28,40 +23,35 @@ void print_file_info(FILE *fp,
 
         uint32_t *zones = NULL;
         int zone_count = 0;
+        /* gather all direct, indirect and double 
+            indirect zones into zones list */
         if (collect_zones(fp, sb, in, partition_offset, &zones, &zone_count)) {
             perror("collect_zones\n");
             free(in);
-            return 1;
-        }
-        if (DEBUG) {
-            printf("Zone count %d\n", zone_count);
-            fflush(NULL);
+            return;
         }
         int i;
+        /* loop through the zones and print the proper 
+        information for each link in the directory*/
         for (i = 0; i < zone_count; i++){
             uint32_t zone_num = zones[i];
-
-
             if(zone_num == 0){
-                break;
+                continue;
             }
-            /* Maybe flip these arrows, i forget...*/
+            /* calculate the zone size from
+            given from the spec */
             long zone_size = (long)sb->blocksize << sb->log_zone_size;
-            debug("Zone size is %ld\n", zone_size);
+            /* go to where the data is actually stored */
             long data_offset = seek_to_zone(fp, sb, zone_num, partition_offset);
             
             if(fseek(fp, data_offset, SEEK_SET)){
                 perror("Failed to seek to data\n");
                 return;
             }
-            
             int entries_in_zone = (int)(zone_size / DIR_SIZE);
-            if (DEBUG) {
-                printf("entreis in zone %d\n", entries_in_zone);
-                fflush(NULL);
-            }
 
             int j;
+            /* loop through all the entreis in the zone */
             for(j = 0; j < entries_in_zone; j++){
                 long cur_pos = ftell(fp);
                 /*if ftell fails*/
@@ -70,23 +60,14 @@ void print_file_info(FILE *fp,
                     return;
                 }
 
-                if(DEBUG){
-                    printf("Cur_pos: %d, data_offset: %d\n", 
-                        
-                        cur_pos, 
-                        data_offset);
-                    fflush(NULL);
-                }
-
                 /* if we made it to the end of the directory */
                 if(cur_pos - data_offset >= in->size){
-                    debug("made it to end of directory while printing\n");
-                    debug("in->size: %u\n", in->size);
                     break;
                 }
 
                 dir_entry *entry = malloc(sizeof(dir_entry));
 
+                /* read in directory entry */
                 if(fread(entry, sizeof(dir_entry), 1, fp) != 1){
                     perror("Couldn't read directory entry\n");
                     free(entry);
@@ -95,14 +76,13 @@ void print_file_info(FILE *fp,
 
                 /* if the entry was deleted */
                 if(entry->inode == 0) {
-                    debug("Inode was 0\n");
                     continue;
                 }
 
+                /* read in inode from directory entry -- saving fp location*/
                 inode *temp = malloc(sizeof(inode));
                 long pointer_copy = ftell(fp);
                 if(read_inode(fp, sb, entry->inode, temp, partition_offset)){
-                    debug("print inode failed\n");
                     free(temp);
                     continue;
                 }
@@ -114,13 +94,13 @@ void print_file_info(FILE *fp,
                 
 
                 char perm2[11];
+                /* get the permission string */
                 get_mode_string(temp->mode, perm2);
-
-
+                /* copy over the name */
                 char namebuf[MAX_NAME_LENGTH + 1];
                 memcpy(namebuf, entry->name, MAX_NAME_LENGTH);
                 namebuf[MAX_NAME_LENGTH] = '\0';
-
+                /* print out the file info */
                 printf("%s %9u %s\n",
                     perm2,
                     temp->size,
@@ -129,10 +109,7 @@ void print_file_info(FILE *fp,
             }
         }
     } else {
-        if (DEBUG) {
-            printf("Permissions: %d\n", permissions);
-            fflush(NULL);
-        }
+        /*increment path to ignore first / created by clean_path*/
         path++;
         printf("%s %9u %s\n", permissions, in->size, path);
     }
@@ -160,10 +137,10 @@ int main(int argc, char *argv[]) {
     /* Grab the MINIX disk file */
     char *minixdisk = argv[optind];
     optind++;
-    const char *path = argv[optind];
+    char *path = argv[optind];
 
-    char canonical[1024];
-    canonicalize_path(path, canonical, sizeof(canonical));
+    char cleaned_path[1024];
+    clean_path(path, cleaned_path, sizeof(cleaned_path));
 
     /* Open disk image*/
     FILE *fp = fopen(minixdisk, "rb");
@@ -171,29 +148,34 @@ int main(int argc, char *argv[]) {
         perror("Unable to open minis file\n");
         return 1;
     }
-
-    long partition_offset = get_partition_offset(partition, fp, subpart);
+    /* calculate partition offset */
+    long partition_offset = get_partition_offset(partition, 
+                                        fp, subpart, verbose);
+    if (partition_offset < 0) {
+        perror("Unable to get partition offset");
+        return 1;
+    }
 
     superblock *sb = malloc(sizeof(superblock));
-
+    /* read in the superblock */
     if (read_superblock(fp, partition_offset, sb)) {
         free(sb);
-        close(fp);
+        fclose(fp);
         return 1;
     }
     if (verbose) {
         print_superblock(sb);
     }
-
-    int path_inum = find_inode_of_path(fp, sb, canonical, partition_offset);
+    /* get the inode corresponding to where we're looking */
+    int path_inum = find_inode(fp, sb, cleaned_path, partition_offset, verbose);
     if (path_inum < 0) {
-        fprintf(stderr, "Failed to find path: %s\n", canonical);
+        fprintf(stderr, "Failed to find path: %s\n", cleaned_path);
         free(sb);
         fclose(fp);
         return 1;
     }
-
-    print_file_info(fp, sb, path_inum, canonical, partition_offset);
+    /* print out the info. */
+    print_file_info(fp, sb, path_inum, cleaned_path, partition_offset);
 
     free(sb);
     fclose(fp);
