@@ -141,7 +141,7 @@ Running the application
        Cmd: minls -p 0 -s 2 HardDisk /home/pnico/Message   
  22 -- subpart., w/bad filename                                         ok.
        Cmd: minls -p 0 -s 0 HardDisk /home/pnico/Message   
- 23 -- directories                                                  FAILED.
+ 23 -- directories                                                      ok.
        Cmd: minls Files /Files                             
  24 -- directories                                                      ok.
        Cmd: minls Files /Files/0000_Zones                  
@@ -153,7 +153,7 @@ Running the application
        Cmd: minls Files /Files/0010_Zones                  
  28 -- directories                                                      ok.
        Cmd: minls Files /Files/1032_Zones                  
- 29 -- directories                                                  FAILED.
+ 29 -- directories                                                      ok.
        Cmd: minls Files /DeepPaths/a/b/c/d/e/i/j/k/Files   
  30 -- directories                                                      ok.
        Cmd: minls Files /DeepPaths/a/b/c/d/e/i/j/k/Files/Message 
@@ -161,11 +161,11 @@ Running the application
        Cmd: minls BigDirectories                           
  32 -- multi-zone directory (file)                                      ok.
        Cmd: minls BigDirectories LastFile                  
- 33 -- indirect directory                                           FAILED.
+ 33 -- indirect directory                                               ok.
        Cmd: minls BigIndirectDirs Level1/Level2            
  34 -- indirect directory (file)                                        ok.
        Cmd: minls BigIndirectDirs Level1/Level2/LastFile   
- 35 -- directories-deleted                                          FAILED.
+ 35 -- directories-deleted                                              ok.
        Cmd: minls Files /Deleted                           
  36 -- directories-ok file                                              ok.
        Cmd: minls Files /Deleted/File-10                   
@@ -348,844 +348,10 @@ Running the application
 125 -- minls: long file name, partial match                             ok.
        Cmd: minls indirectblock ThisNameHasSixtyCharactersItReallyDoesThatsALotReallyItIsBooTooLong 
    =======================================================================
-Failure. (109/125 passed)
+Failure. (113/125 passed)
 
 Actual ouput from tests and detailed results are below.
 
-
-
------------------
-23) directories:
-     minls /home/pn-cs453/Given/Asgn5/Images/Files /Files 
------------------
-Test program output:
-Files:
-drwxr-xr-x       448 .
-drwxrwxrwx       448 ..
--rw-r--r--         0 0000_Zones
--rw-r--r--      4096 0000_Zone
--rw-r--r--     28672 0007_Zones
--rw-r--r--     40960 0010_Zones
--rw-r--r--   4227072 1032_Zones
-Diffs: ( < Reference > Testfile ):
-1c1
-< /Files:
----
-> Files:
-
-
------------------
-29) directories:
-     minls /home/pn-cs453/Given/Asgn5/Images/Files /DeepPaths/a/b/c/d/e/i/j/k/Files 
------------------
-Test program output:
-DeepPaths/a/b/c/d/e/i/j/k/Files:
-drwxr-xr-x       192 .
-drwxr-xr-x       192 ..
--rw-r--r--        47 Message
-Diffs: ( < Reference > Testfile ):
-1c1
-< /DeepPaths/a/b/c/d/e/i/j/k/Files:
----
-> DeepPaths/a/b/c/d/e/i/j/k/Files:
-
-
------------------
-33) indirect directory:
-     minls /home/pn-cs453/Given/Asgn5/Images/BigIndirectDirs Level1/Level2 
------------------
-Test program output:
-Level1/Level2:
-drwxr-xr-x     49024 .
-drwxr-xr-x       192 ..
-drwxr-xr-x       128 BigDir
--rw-r--r--         0 file_000
--rw-r--r--         0 file_001
--rw-r--r--         0 file_002
--rw-r--r--         0 file_003
--rw-r--r--         0 file_004
--rw-r--r--         0 file_005
--rw-r--r--         0 file_006
--rw-r--r--         0 file_007
--rw-r--r--         0 file_010
--rw-r--r--         0 file_011
--rw-r--r--         0 file_012
--rw-r--r--         0 file_013
--rw-r--r--         0 file_014
--rw-r--r--         0 file_015
--rw-r--r--         0 file_016
--rw-r--r--         0 file_017
--rw-r--r--         0 file_020
--rw-r--r--         0 file_021
--rw-r--r--         0 file_022
--rw-r--r--         0 file_023
--rw-r--r--         0 file_024
--rw-r--r--         0 file_025
--rw-r--r--         0 file_026
--rw-r--r--         0 file_027
--rw-r--r--         0 file_030
--rw-r--r--         0 file_031
--rw-r--r--         0 file_032
--rw-r--r--         0 file_033
--rw-r--r--         0 file_034
--rw-r--r--         0 file_035
--rw-r--r--         0 file_036
--rw-r--r--         0 file_037
--rw-r--r--         0 file_040
--rw-r--r--         0 file_041
--rw-r--r--         0 file_042
--rw-r--r--         0 file_043
--rw-r--r--         0 file_044
--rw-r--r--         0 file_045
--rw-r--r--         0 file_046
--rw-r--r--         0 file_047
--rw-r--r--         0 file_050
--rw-r--r--         0 file_051
--rw-r--r--         0 file_052
--rw-r--r--         0 file_053
--rw-r--r--         0 file_054
--rw-r--r--         0 file_055
--rw-r--r--         0 file_056
--rw-r--r--         0 file_057
--rw-r--r--         0 file_060
--rw-r--r--         0 file_061
--rw-r--r--         0 file_062
--rw-r--r--         0 file_063
--rw-r--r--         0 file_064
--rw-r--r--         0 file_065
--rw-r--r--         0 file_066
--rw-r--r--         0 file_067
--rw-r--r--         0 file_070
--rw-r--r--         0 file_071
--rw-r--r--         0 file_072
--rw-r--r--         0 file_073
--rw-r--r--         0 file_074
--rw-r--r--         0 file_075
--rw-r--r--         0 file_076
--rw-r--r--         0 file_077
--rw-r--r--         0 file_080
--rw-r--r--         0 file_081
--rw-r--r--         0 file_082
--rw-r--r--         0 file_083
--rw-r--r--         0 file_084
--rw-r--r--         0 file_085
--rw-r--r--         0 file_086
--rw-r--r--         0 file_087
--rw-r--r--         0 file_090
--rw-r--r--         0 file_091
--rw-r--r--         0 file_092
--rw-r--r--         0 file_093
--rw-r--r--         0 file_094
--rw-r--r--         0 file_095
--rw-r--r--         0 file_096
--rw-r--r--         0 file_097
--rw-r--r--         0 file_100
--rw-r--r--         0 file_101
--rw-r--r--         0 file_102
--rw-r--r--         0 file_103
--rw-r--r--         0 file_104
--rw-r--r--         0 file_105
--rw-r--r--         0 file_106
--rw-r--r--         0 file_107
--rw-r--r--         0 file_110
--rw-r--r--         0 file_111
--rw-r--r--         0 file_112
--rw-r--r--         0 file_113
--rw-r--r--         0 file_114
--rw-r--r--         0 file_115
--rw-r--r--         0 file_116
--rw-r--r--         0 file_117
--rw-r--r--         0 file_120
--rw-r--r--         0 file_121
--rw-r--r--         0 file_122
--rw-r--r--         0 file_123
--rw-r--r--         0 file_124
--rw-r--r--         0 file_125
--rw-r--r--         0 file_126
--rw-r--r--         0 file_127
--rw-r--r--         0 file_130
--rw-r--r--         0 file_131
--rw-r--r--         0 file_132
--rw-r--r--         0 file_133
--rw-r--r--         0 file_134
--rw-r--r--         0 file_135
--rw-r--r--         0 file_136
--rw-r--r--         0 file_137
--rw-r--r--         0 file_140
--rw-r--r--         0 file_141
--rw-r--r--         0 file_142
--rw-r--r--         0 file_143
--rw-r--r--         0 file_144
--rw-r--r--         0 file_145
--rw-r--r--         0 file_146
--rw-r--r--         0 file_147
--rw-r--r--         0 file_150
--rw-r--r--         0 file_151
--rw-r--r--         0 file_152
--rw-r--r--         0 file_153
--rw-r--r--         0 file_154
--rw-r--r--         0 file_155
--rw-r--r--         0 file_156
--rw-r--r--         0 file_157
--rw-r--r--         0 file_160
--rw-r--r--         0 file_161
--rw-r--r--         0 file_162
--rw-r--r--         0 file_163
--rw-r--r--         0 file_164
--rw-r--r--         0 file_165
--rw-r--r--         0 file_166
--rw-r--r--         0 file_167
--rw-r--r--         0 file_170
--rw-r--r--         0 file_171
--rw-r--r--         0 file_172
--rw-r--r--         0 file_173
--rw-r--r--         0 file_174
--rw-r--r--         0 file_175
--rw-r--r--         0 file_176
--rw-r--r--         0 file_177
--rw-r--r--         0 file_180
--rw-r--r--         0 file_181
--rw-r--r--         0 file_182
--rw-r--r--         0 file_183
--rw-r--r--         0 file_184
--rw-r--r--         0 file_185
--rw-r--r--         0 file_186
--rw-r--r--         0 file_187
--rw-r--r--         0 file_190
--rw-r--r--         0 file_191
--rw-r--r--         0 file_192
--rw-r--r--         0 file_193
--rw-r--r--         0 file_194
--rw-r--r--         0 file_195
--rw-r--r--         0 file_196
--rw-r--r--         0 file_197
--rw-r--r--         0 file_200
--rw-r--r--         0 file_201
--rw-r--r--         0 file_202
--rw-r--r--         0 file_203
--rw-r--r--         0 file_204
--rw-r--r--         0 file_205
--rw-r--r--         0 file_206
--rw-r--r--         0 file_207
--rw-r--r--         0 file_210
--rw-r--r--         0 file_211
--rw-r--r--         0 file_212
--rw-r--r--         0 file_213
--rw-r--r--         0 file_214
--rw-r--r--         0 file_215
--rw-r--r--         0 file_216
--rw-r--r--         0 file_217
--rw-r--r--         0 file_220
--rw-r--r--         0 file_221
--rw-r--r--         0 file_222
--rw-r--r--         0 file_223
--rw-r--r--         0 file_224
--rw-r--r--         0 file_225
--rw-r--r--         0 file_226
--rw-r--r--         0 file_227
--rw-r--r--         0 file_230
--rw-r--r--         0 file_231
--rw-r--r--         0 file_232
--rw-r--r--         0 file_233
--rw-r--r--         0 file_234
--rw-r--r--         0 file_235
--rw-r--r--         0 file_236
--rw-r--r--         0 file_237
--rw-r--r--         0 file_240
--rw-r--r--         0 file_241
--rw-r--r--         0 file_242
--rw-r--r--         0 file_243
--rw-r--r--         0 file_244
--rw-r--r--         0 file_245
--rw-r--r--         0 file_246
--rw-r--r--         0 file_247
--rw-r--r--         0 file_250
--rw-r--r--         0 file_251
--rw-r--r--         0 file_252
--rw-r--r--         0 file_253
--rw-r--r--         0 file_254
--rw-r--r--         0 file_255
--rw-r--r--         0 file_256
--rw-r--r--         0 file_257
--rw-r--r--         0 file_260
--rw-r--r--         0 file_261
--rw-r--r--         0 file_262
--rw-r--r--         0 file_263
--rw-r--r--         0 file_264
--rw-r--r--         0 file_265
--rw-r--r--         0 file_266
--rw-r--r--         0 file_267
--rw-r--r--         0 file_270
--rw-r--r--         0 file_271
--rw-r--r--         0 file_272
--rw-r--r--         0 file_273
--rw-r--r--         0 file_274
--rw-r--r--         0 file_275
--rw-r--r--         0 file_276
--rw-r--r--         0 file_277
--rw-r--r--         0 file_280
--rw-r--r--         0 file_281
--rw-r--r--         0 file_282
--rw-r--r--         0 file_283
--rw-r--r--         0 file_284
--rw-r--r--         0 file_285
--rw-r--r--         0 file_286
--rw-r--r--         0 file_287
--rw-r--r--         0 file_290
--rw-r--r--         0 file_291
--rw-r--r--         0 file_292
--rw-r--r--         0 file_293
--rw-r--r--         0 file_294
--rw-r--r--         0 file_295
--rw-r--r--         0 file_296
--rw-r--r--         0 file_297
--rw-r--r--         0 file_300
--rw-r--r--         0 file_301
--rw-r--r--         0 file_302
--rw-r--r--         0 file_303
--rw-r--r--         0 file_304
--rw-r--r--         0 file_305
--rw-r--r--         0 file_306
--rw-r--r--         0 file_307
--rw-r--r--         0 file_310
--rw-r--r--         0 file_311
--rw-r--r--         0 file_312
--rw-r--r--         0 file_313
--rw-r--r--         0 file_314
--rw-r--r--         0 file_315
--rw-r--r--         0 file_316
--rw-r--r--         0 file_317
--rw-r--r--         0 file_320
--rw-r--r--         0 file_321
--rw-r--r--         0 file_322
--rw-r--r--         0 file_323
--rw-r--r--         0 file_324
--rw-r--r--         0 file_325
--rw-r--r--         0 file_326
--rw-r--r--         0 file_327
--rw-r--r--         0 file_330
--rw-r--r--         0 file_331
--rw-r--r--         0 file_332
--rw-r--r--         0 file_333
--rw-r--r--         0 file_334
--rw-r--r--         0 file_335
--rw-r--r--         0 file_336
--rw-r--r--         0 file_337
--rw-r--r--         0 file_340
--rw-r--r--         0 file_341
--rw-r--r--         0 file_342
--rw-r--r--         0 file_343
--rw-r--r--         0 file_344
--rw-r--r--         0 file_345
--rw-r--r--         0 file_346
--rw-r--r--         0 file_347
--rw-r--r--         0 file_350
--rw-r--r--         0 file_351
--rw-r--r--         0 file_352
--rw-r--r--         0 file_353
--rw-r--r--         0 file_354
--rw-r--r--         0 file_355
--rw-r--r--         0 file_356
--rw-r--r--         0 file_357
--rw-r--r--         0 file_360
--rw-r--r--         0 file_361
--rw-r--r--         0 file_362
--rw-r--r--         0 file_363
--rw-r--r--         0 file_364
--rw-r--r--         0 file_365
--rw-r--r--         0 file_366
--rw-r--r--         0 file_367
--rw-r--r--         0 file_370
--rw-r--r--         0 file_371
--rw-r--r--         0 file_372
--rw-r--r--         0 file_373
--rw-r--r--         0 file_374
--rw-r--r--         0 file_375
--rw-r--r--         0 file_376
--rw-r--r--         0 file_377
--rw-r--r--         0 file_380
--rw-r--r--         0 file_381
--rw-r--r--         0 file_382
--rw-r--r--         0 file_383
--rw-r--r--         0 file_384
--rw-r--r--         0 file_385
--rw-r--r--         0 file_386
--rw-r--r--         0 file_387
--rw-r--r--         0 file_390
--rw-r--r--         0 file_391
--rw-r--r--         0 file_392
--rw-r--r--         0 file_393
--rw-r--r--         0 file_394
--rw-r--r--         0 file_395
--rw-r--r--         0 file_396
--rw-r--r--         0 file_397
--rw-r--r--         0 file_400
--rw-r--r--         0 file_401
--rw-r--r--         0 file_402
--rw-r--r--         0 file_403
--rw-r--r--         0 file_404
--rw-r--r--         0 file_405
--rw-r--r--         0 file_406
--rw-r--r--         0 file_407
--rw-r--r--         0 file_410
--rw-r--r--         0 file_411
--rw-r--r--         0 file_412
--rw-r--r--         0 file_413
--rw-r--r--         0 file_414
--rw-r--r--         0 file_415
--rw-r--r--         0 file_416
--rw-r--r--         0 file_417
--rw-r--r--         0 file_420
--rw-r--r--         0 file_421
--rw-r--r--         0 file_422
--rw-r--r--         0 file_423
--rw-r--r--         0 file_424
--rw-r--r--         0 file_425
--rw-r--r--         0 file_426
--rw-r--r--         0 file_427
--rw-r--r--         0 file_430
--rw-r--r--         0 file_431
--rw-r--r--         0 file_432
--rw-r--r--         0 file_433
--rw-r--r--         0 file_434
--rw-r--r--         0 file_435
--rw-r--r--         0 file_436
--rw-r--r--         0 file_437
--rw-r--r--         0 file_440
--rw-r--r--         0 file_441
--rw-r--r--         0 file_442
--rw-r--r--         0 file_443
--rw-r--r--         0 file_444
--rw-r--r--         0 file_445
--rw-r--r--         0 file_446
--rw-r--r--         0 file_447
--rw-r--r--         0 file_450
--rw-r--r--         0 file_451
--rw-r--r--         0 file_452
--rw-r--r--         0 file_453
--rw-r--r--         0 file_454
--rw-r--r--         0 file_455
--rw-r--r--         0 file_456
--rw-r--r--         0 file_457
--rw-r--r--         0 file_460
--rw-r--r--         0 file_461
--rw-r--r--         0 file_462
--rw-r--r--         0 file_463
--rw-r--r--         0 file_464
--rw-r--r--         0 file_465
--rw-r--r--         0 file_466
--rw-r--r--         0 file_467
--rw-r--r--         0 file_470
--rw-r--r--         0 file_471
--rw-r--r--         0 file_472
--rw-r--r--         0 file_473
--rw-r--r--         0 file_474
--rw-r--r--         0 file_475
--rw-r--r--         0 file_476
--rw-r--r--         0 file_477
--rw-r--r--         0 file_480
--rw-r--r--         0 file_481
--rw-r--r--         0 file_482
--rw-r--r--         0 file_483
--rw-r--r--         0 file_484
--rw-r--r--         0 file_485
--rw-r--r--         0 file_486
--rw-r--r--         0 file_487
--rw-r--r--         0 file_490
--rw-r--r--         0 file_491
--rw-r--r--         0 file_492
--rw-r--r--         0 file_493
--rw-r--r--         0 file_494
--rw-r--r--         0 file_495
--rw-r--r--         0 file_496
--rw-r--r--         0 file_497
--rw-r--r--         0 file_500
--rw-r--r--         0 file_501
--rw-r--r--         0 file_502
--rw-r--r--         0 file_503
--rw-r--r--         0 file_504
--rw-r--r--         0 file_505
--rw-r--r--         0 file_506
--rw-r--r--         0 file_507
--rw-r--r--         0 file_510
--rw-r--r--         0 file_511
--rw-r--r--         0 file_512
--rw-r--r--         0 file_513
--rw-r--r--         0 file_514
--rw-r--r--         0 file_515
--rw-r--r--         0 file_516
--rw-r--r--         0 file_517
--rw-r--r--         0 file_520
--rw-r--r--         0 file_521
--rw-r--r--         0 file_522
--rw-r--r--         0 file_523
--rw-r--r--         0 file_524
--rw-r--r--         0 file_525
--rw-r--r--         0 file_526
--rw-r--r--         0 file_527
--rw-r--r--         0 file_530
--rw-r--r--         0 file_531
--rw-r--r--         0 file_532
--rw-r--r--         0 file_533
--rw-r--r--         0 file_534
--rw-r--r--         0 file_535
--rw-r--r--         0 file_536
--rw-r--r--         0 file_537
--rw-r--r--         0 file_540
--rw-r--r--         0 file_541
--rw-r--r--         0 file_542
--rw-r--r--         0 file_543
--rw-r--r--         0 file_544
--rw-r--r--         0 file_545
--rw-r--r--         0 file_546
--rw-r--r--         0 file_547
--rw-r--r--         0 file_550
--rw-r--r--         0 file_551
--rw-r--r--         0 file_552
--rw-r--r--         0 file_553
--rw-r--r--         0 file_554
--rw-r--r--         0 file_555
--rw-r--r--         0 file_556
--rw-r--r--         0 file_557
--rw-r--r--         0 file_560
--rw-r--r--         0 file_561
--rw-r--r--         0 file_562
--rw-r--r--         0 file_563
--rw-r--r--         0 file_564
--rw-r--r--         0 file_565
--rw-r--r--         0 file_566
--rw-r--r--         0 file_567
--rw-r--r--         0 file_570
--rw-r--r--         0 file_571
--rw-r--r--         0 file_572
--rw-r--r--         0 file_573
--rw-r--r--         0 file_574
--rw-r--r--         0 file_575
--rw-r--r--         0 file_576
--rw-r--r--         0 file_577
--rw-r--r--         0 file_580
--rw-r--r--         0 file_581
--rw-r--r--         0 file_582
--rw-r--r--         0 file_583
--rw-r--r--         0 file_584
--rw-r--r--         0 file_585
--rw-r--r--         0 file_586
--rw-r--r--         0 file_587
--rw-r--r--         0 file_590
--rw-r--r--         0 file_591
--rw-r--r--         0 file_592
--rw-r--r--         0 file_593
--rw-r--r--         0 file_594
--rw-r--r--         0 file_595
--rw-r--r--         0 file_596
--rw-r--r--         0 file_597
--rw-r--r--         0 file_600
--rw-r--r--         0 file_601
--rw-r--r--         0 file_602
--rw-r--r--         0 file_603
--rw-r--r--         0 file_604
--rw-r--r--         0 file_605
--rw-r--r--         0 file_606
--rw-r--r--         0 file_607
--rw-r--r--         0 file_610
--rw-r--r--         0 file_611
--rw-r--r--         0 file_612
--rw-r--r--         0 file_613
--rw-r--r--         0 file_614
--rw-r--r--         0 file_615
--rw-r--r--         0 file_616
--rw-r--r--         0 file_617
--rw-r--r--         0 file_620
--rw-r--r--         0 file_621
--rw-r--r--         0 file_622
--rw-r--r--         0 file_623
--rw-r--r--         0 file_624
--rw-r--r--         0 file_625
--rw-r--r--         0 file_626
--rw-r--r--         0 file_627
--rw-r--r--         0 file_630
--rw-r--r--         0 file_631
--rw-r--r--         0 file_632
--rw-r--r--         0 file_633
--rw-r--r--         0 file_634
--rw-r--r--         0 file_635
--rw-r--r--         0 file_636
--rw-r--r--         0 file_637
--rw-r--r--         0 file_640
--rw-r--r--         0 file_641
--rw-r--r--         0 file_642
--rw-r--r--         0 file_643
--rw-r--r--         0 file_644
--rw-r--r--         0 file_645
--rw-r--r--         0 file_646
--rw-r--r--         0 file_647
--rw-r--r--         0 file_650
--rw-r--r--         0 file_651
--rw-r--r--         0 file_652
--rw-r--r--         0 file_653
--rw-r--r--         0 file_654
--rw-r--r--         0 file_655
--rw-r--r--         0 file_656
--rw-r--r--         0 file_657
--rw-r--r--         0 file_660
--rw-r--r--         0 file_661
--rw-r--r--         0 file_662
--rw-r--r--         0 file_663
--rw-r--r--         0 file_664
--rw-r--r--         0 file_665
--rw-r--r--         0 file_666
--rw-r--r--         0 file_667
--rw-r--r--         0 file_670
--rw-r--r--         0 file_671
--rw-r--r--         0 file_672
--rw-r--r--         0 file_673
--rw-r--r--         0 file_674
--rw-r--r--         0 file_675
--rw-r--r--         0 file_676
--rw-r--r--         0 file_677
--rw-r--r--         0 file_680
--rw-r--r--         0 file_681
--rw-r--r--         0 file_682
--rw-r--r--         0 file_683
--rw-r--r--         0 file_684
--rw-r--r--         0 file_685
--rw-r--r--         0 file_686
--rw-r--r--         0 file_687
--rw-r--r--         0 file_690
--rw-r--r--         0 file_691
--rw-r--r--         0 file_692
--rw-r--r--         0 file_693
--rw-r--r--         0 file_694
--rw-r--r--         0 file_695
--rw-r--r--         0 file_696
--rw-r--r--         0 file_697
--rw-r--r--         0 file_700
--rw-r--r--         0 file_701
--rw-r--r--         0 file_702
--rw-r--r--         0 file_703
--rw-r--r--         0 file_704
--rw-r--r--         0 file_705
--rw-r--r--         0 file_706
--rw-r--r--         0 file_707
--rw-r--r--         0 file_710
--rw-r--r--         0 file_711
--rw-r--r--         0 file_712
--rw-r--r--         0 file_713
--rw-r--r--         0 file_714
--rw-r--r--         0 file_715
--rw-r--r--         0 file_716
--rw-r--r--         0 file_717
--rw-r--r--         0 file_720
--rw-r--r--         0 file_721
--rw-r--r--         0 file_722
--rw-r--r--         0 file_723
--rw-r--r--         0 file_724
--rw-r--r--         0 file_725
--rw-r--r--         0 file_726
--rw-r--r--         0 file_727
--rw-r--r--         0 file_730
--rw-r--r--         0 file_731
--rw-r--r--         0 file_732
--rw-r--r--         0 file_733
--rw-r--r--         0 file_734
--rw-r--r--         0 file_735
--rw-r--r--         0 file_736
--rw-r--r--         0 file_737
--rw-r--r--         0 file_740
--rw-r--r--         0 file_741
--rw-r--r--         0 file_742
--rw-r--r--         0 file_743
--rw-r--r--         0 file_744
--rw-r--r--         0 file_745
--rw-r--r--         0 file_746
--rw-r--r--         0 file_747
--rw-r--r--         0 file_750
--rw-r--r--         0 file_751
--rw-r--r--         0 file_752
--rw-r--r--         0 file_753
--rw-r--r--         0 file_754
--rw-r--r--         0 file_755
--rw-r--r--         0 file_756
--rw-r--r--         0 file_757
--rw-r--r--         0 file_760
--rw-r--r--         0 file_761
--rw-r--r--         0 file_762
--rw-r--r--         0 file_763
--rw-r--r--         0 file_764
--rw-r--r--         0 file_765
--rw-r--r--         0 file_766
--rw-r--r--         0 file_767
--rw-r--r--         0 file_770
--rw-r--r--         0 file_771
--rw-r--r--         0 file_772
--rw-r--r--         0 file_773
--rw-r--r--         0 file_774
--rw-r--r--         0 file_775
--rw-r--r--         0 file_776
--rw-r--r--         0 file_777
--rw-r--r--         0 file_780
--rw-r--r--         0 file_781
--rw-r--r--         0 file_782
--rw-r--r--         0 file_783
--rw-r--r--         0 file_784
--rw-r--r--         0 file_785
--rw-r--r--         0 file_786
--rw-r--r--         0 file_787
--rw-r--r--         0 file_790
--rw-r--r--         0 file_791
--rw-r--r--         0 file_792
--rw-r--r--         0 file_793
--rw-r--r--         0 file_794
--rw-r--r--         0 file_795
--rw-r--r--         0 file_796
--rw-r--r--         0 file_797
--rw-r--r--         0 file_800
--rw-r--r--         0 file_801
--rw-r--r--         0 file_802
--rw-r--r--         0 file_803
--rw-r--r--         0 file_804
--rw-r--r--         0 file_805
--rw-r--r--         0 file_806
--rw-r--r--         0 file_807
--rw-r--r--         0 file_810
--rw-r--r--         0 file_811
--rw-r--r--         0 file_812
--rw-r--r--         0 file_813
--rw-r--r--         0 file_814
--rw-r--r--         0 file_815
--rw-r--r--         0 file_816
--rw-r--r--         0 file_817
--rw-r--r--         0 file_820
--rw-r--r--         0 file_821
--rw-r--r--         0 file_822
--rw-r--r--         0 file_823
--rw-r--r--         0 file_824
--rw-r--r--         0 file_825
--rw-r--r--         0 file_826
--rw-r--r--         0 file_827
--rw-r--r--         0 file_830
--rw-r--r--         0 file_831
--rw-r--r--         0 file_832
--rw-r--r--         0 file_833
--rw-r--r--         0 file_834
--rw-r--r--         0 file_835
--rw-r--r--         0 file_836
--rw-r--r--         0 file_837
--rw-r--r--         0 file_840
--rw-r--r--         0 file_841
--rw-r--r--         0 file_842
--rw-r--r--         0 file_843
--rw-r--r--         0 file_844
--rw-r--r--         0 file_845
--rw-r--r--         0 file_846
--rw-r--r--         0 file_847
--rw-r--r--         0 file_850
--rw-r--r--         0 file_851
--rw-r--r--         0 file_852
--rw-r--r--         0 file_853
--rw-r--r--         0 file_854
--rw-r--r--         0 file_855
--rw-r--r--         0 file_856
--rw-r--r--         0 file_857
--rw-r--r--         0 file_860
--rw-r--r--         0 file_861
--rw-r--r--         0 file_862
--rw-r--r--         0 file_863
--rw-r--r--         0 file_864
--rw-r--r--         0 file_865
--rw-r--r--         0 file_866
--rw-r--r--         0 file_867
--rw-r--r--         0 file_870
--rw-r--r--         0 file_871
--rw-r--r--         0 file_872
--rw-r--r--         0 file_873
--rw-r--r--         0 file_874
--rw-r--r--         0 file_875
--rw-r--r--         0 file_876
--rw-r--r--         0 file_877
--rw-r--r--         0 file_880
--rw-r--r--         0 file_881
--rw-r--r--         0 file_882
--rw-r--r--         0 file_883
--rw-r--r--         0 file_884
--rw-r--r--         0 file_885
--rw-r--r--         0 file_886
--rw-r--r--         0 file_887
--rw-r--r--         0 file_890
--rw-r--r--         0 file_891
--rw-r--r--         0 file_892
--rw-r--r--         0 file_893
--rw-r--r--         0 file_894
--rw-r--r--         0 file_895
--rw-r--r--         0 file_896
--rw-r--r--         0 file_897
--rw-r--r--         0 file_900
--rw-r--r--         0 file_901
--rw-r--r--         0 file_902
--rw-r--r--         0 file_903
--rw-r--r--         0 file_904
--rw-r--r--         0 file_905
--rw-r--r--         0 file_906
--rw-r--r--         0 file_907
--rw-r--r--         0 file_910
--rw-r--r--         0 file_911
--rw-r--r--         0 file_912
--rw-r--r--         0 file_913
--rw-r--r--         0 file_914
--rw-r--r--         0 file_915
--rw-r--r--         0 file_916
--rw-r--r--         0 file_917
--rw-r--r--         0 file_920
--rw-r--r--         0 file_921
--rw-r--r--         0 file_922
--rw-r--r--         0 file_923
--rw-r--r--         0 file_924
--rw-r--r--         0 file_925
--rw-r--r--         0 file_926
--rw-r--r--         0 file_927
--rw-r--r--         0 file_930
--rw-r--r--         0 file_931
--rw-r--r--         0 file_932
--rw-r--r--         0 file_933
--rw-r--r--         0 file_934
--rw-r--r--         0 file_935
--rw-r--r--         0 file_936
--rw-r--r--         0 file_937
--rw-r--r--         0 file_940
--rw-r--r--         0 file_941
--rw-r--r--         0 file_942
--rw-r--r--         0 file_943
--rw-r--r--         0 file_944
--rw-r--r--         0 file_945
--rw-r--r--         0 file_946
--rw-r--r--         0 file_947
--rw-r--r--         0 file_950
--rw-r--r--       113 LastFile
-Diffs: ( < Reference > Testfile ):
-1c1
-< /Level1/Level2:
----
-> Level1/Level2:
-
-
------------------
-35) directories-deleted:
-     minls /home/pn-cs453/Given/Asgn5/Images/Files /Deleted 
------------------
-Test program output:
-Deleted:
-drwxr-xr-x       768 .
-drwxrwxrwx       448 ..
--rwxr-xr-x       181 File-02
--rwxr-xr-x       181 File-04
--rwxr-xr-x       181 File-06
--rwxr-xr-x       181 File-08
--rwxr-xr-x       181 File-10
-Diffs: ( < Reference > Testfile ):
-1c1
-< /Deleted:
----
-> Deleted:
 
 
 -----------------
@@ -1196,16 +362,16 @@ Program exited with bad status: 255
 
 Test program output:
  --- Output limited to 10 lines. (There would be too much.) ---
-*** Error in `./minget': double free or corruption (!prev): 0x0000000001af77b0 ***^M
+*** Error in `./minget': double free or corruption (!prev): 0x0000000001ff77b0 ***^M
 ======= Backtrace: =========^M
-/lib64/libc.so.6(+0x7f474)[0x7f6f9053b474]^M
-/lib64/libc.so.6(+0x84770)[0x7f6f90540770]^M
-/lib64/libc.so.6(realloc+0x1d2)[0x7f6f90541e12]^M
+/lib64/libc.so.6(+0x7f474)[0x7f39e91af474]^M
+/lib64/libc.so.6(+0x84770)[0x7f39e91b4770]^M
+/lib64/libc.so.6(realloc+0x1d2)[0x7f39e91b5e12]^M
 ./minget[0x401114]^M
 ./minget[0x4018d2]^M
 ./minget[0x401b84]^M
 ./minget[0x400d31]^M
-/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f6f904de555]^M
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f39e9152555]^M
 /home/pnico/bin/iolimit.Linux.x86_64: output line limit (10) exceeded.
 
 
@@ -1217,16 +383,16 @@ Program exited with bad status: 255
 
 Test program output:
  --- Output limited to 10 lines. (There would be too much.) ---
-*** Error in `./minget': double free or corruption (!prev): 0x000000000216c7b0 ***^M
+*** Error in `./minget': double free or corruption (!prev): 0x0000000000b677b0 ***^M
 ======= Backtrace: =========^M
-/lib64/libc.so.6(+0x7f474)[0x7f98fcaa5474]^M
-/lib64/libc.so.6(+0x84770)[0x7f98fcaaa770]^M
-/lib64/libc.so.6(realloc+0x1d2)[0x7f98fcaabe12]^M
+/lib64/libc.so.6(+0x7f474)[0x7f34d0d01474]^M
+/lib64/libc.so.6(+0x84770)[0x7f34d0d06770]^M
+/lib64/libc.so.6(realloc+0x1d2)[0x7f34d0d07e12]^M
 ./minget[0x401114]^M
 ./minget[0x4018d2]^M
 ./minget[0x401b84]^M
 ./minget[0x400d31]^M
-/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f98fca48555]^M
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f34d0ca4555]^M
 /home/pnico/bin/iolimit.Linux.x86_64: output line limit (10) exceeded.
 
 
@@ -1240,7 +406,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/104 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/104 and testminfs.27113 differ
 
 
 -----------------
@@ -1253,7 +419,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/105 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/105 and testminfs.27113 differ
 
 
 -----------------
@@ -1266,7 +432,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/106 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/106 and testminfs.27113 differ
 
 
 -----------------
@@ -1279,7 +445,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/107 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/107 and testminfs.27113 differ
 
 
 -----------------
@@ -1292,7 +458,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/109 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/109 and testminfs.27113 differ
 
 
 -----------------
@@ -1305,7 +471,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/110 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/110 and testminfs.27113 differ
 
 
 -----------------
@@ -1318,7 +484,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/111 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/111 and testminfs.27113 differ
 
 
 -----------------
@@ -1331,7 +497,7 @@ Before the hole.
 ^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^/home/pnico/bin/iolimit.Linux.x86_64: output character limit (2048) exceeded.
 Diffs: ( < Reference > Testfile ):
  --- Output limited to 10 lines. (There would be too much.) ---
-Binary files /home/pn-cs453/Given/Asgn5/Expected/112 and testminfs.16674 differ
+Binary files /home/pn-cs453/Given/Asgn5/Expected/112 and testminfs.27113 differ
 
 
 -----------------
@@ -1350,16 +516,16 @@ Program exited with bad status: 255
 
 Test program output:
  --- Output limited to 10 lines. (There would be too much.) ---
-*** Error in `./minget': double free or corruption (!prev): 0x0000000001ee5590 ***^M
+*** Error in `./minget': double free or corruption (!prev): 0x0000000000733590 ***^M
 ======= Backtrace: =========^M
-/lib64/libc.so.6(+0x7f474)[0x7f6a39235474]^M
-/lib64/libc.so.6(+0x84770)[0x7f6a3923a770]^M
-/lib64/libc.so.6(realloc+0x1d2)[0x7f6a3923be12]^M
+/lib64/libc.so.6(+0x7f474)[0x7f35769cd474]^M
+/lib64/libc.so.6(+0x84770)[0x7f35769d2770]^M
+/lib64/libc.so.6(realloc+0x1d2)[0x7f35769d3e12]^M
 ./minget[0x401114]^M
 ./minget[0x4018d2]^M
 ./minget[0x401b84]^M
 ./minget[0x400d31]^M
-/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f6a391d8555]^M
+/lib64/libc.so.6(__libc_start_main+0xf5)[0x7f3576970555]^M
 /home/pnico/bin/iolimit.Linux.x86_64: output line limit (10) exceeded.
 FAILED.
 

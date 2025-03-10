@@ -101,6 +101,9 @@ void canonicalize_path(char *in, char *out, size_t outsize) {
     char *ptr = out;
     size_t written = 0;
 
+    *ptr++ = '/';
+    written++;
+
     token = strtok(in, delim);
     while(token != NULL){
         size_t len = strlen(token);

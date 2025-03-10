@@ -134,6 +134,7 @@ void print_file_info(FILE *fp,
             printf("Permissions: %d\n", permissions);
             fflush(NULL);
         }
+        path++;
         printf("%s %9u %s\n", permissions, in->size, path);
     }
 }
