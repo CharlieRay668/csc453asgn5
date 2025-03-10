@@ -127,3 +127,14 @@ int read_inode(FILE *fp,
 read_superblock(FILE *fp, long partition_start, superblock *sb);
 
 long compute_partition_offset(const partition_table *pentry);
+
+long get_partition_offset(int partition,
+                            FILE *fp,
+                            int subpart);
+
+int process_args(int argc, 
+                char *argv[], 
+                int *verbose, 
+                int *partition, 
+                int *subpart, 
+                int *arg_index);

@@ -128,87 +128,14 @@ void print_file_info(FILE *fp,
                 );
             }
         }
-        
     } else {
-        if(DEBUG){
+        if (DEBUG) {
             printf("Permissions: %d\n", permissions);
             fflush(NULL);
         }
         path++;
         printf("%s %9u %s\n", permissions, in->size, path);
     }
-}
-
-int process_args(int argc, 
-                char *argv[], 
-                int *verbose, 
-                int *partition, 
-                int *subpart, 
-                int *arg_index) {
-    /* Handle user command line arguments */
-    int opt;
-    if (DEBUG) {
-        printf("Inside process args\n");
-        fflush(NULL);
-    }   
-    while ((opt = getopt(argc, argv, "hvp:s:")) != -1) {
-        switch (opt) {
-            case 'h':
-                usage(argv[0]);
-                return 1;
-            case 'v':
-                printf("Option -v\n");
-                *verbose = 1;
-                break;
-            case 'p':
-                *partition = atoi(optarg);
-                if (*verbose) {
-                    printf("Option -p with value '%d'\n", *partition);
-                }   
-                break;
-            case 's':
-                *subpart = atoi(optarg);
-                if(*verbose){
-                    printf("Option -s with value '%d'\n", *subpart);
-                }
-                break;
-            case '?':
-                usage(argv[0]);
-                return 1;
-        }
-    }
-    *arg_index = optind;
-    return 0;
-}
-
-char *get_path(int optind, int argc, char *argv[]) {
-    char *path = NULL;
-    if (optind <= argc) {
-        if(DEBUG){
-            printf("Setting path\n");
-            fflush(NULL);
-        }
-        path = argv[optind];
-    }
-
-    if(DEBUG){
-        printf("Path: %s\n", path);
-        fflush(NULL);
-    }
-
-    char *canonical = malloc(1024);
-    if (!canonical) {
-        perror("malloc failed");
-        exit(EXIT_FAILURE);
-    }
-
-    if (!path) {
-        strncpy(canonical, "/", 1024);
-    } else {
-        canonicalize_path(path, canonical, 1024);
-    }
-    
-    return canonical;
 }
 
 int main(int argc, char *argv[]) {
@@ -224,13 +151,19 @@ int main(int argc, char *argv[]) {
 
     /* We only go options, we need arguments to run */
     if (optind >= argc) {
-        perror("Please enter arguments\n");
+        fprintf(stderr, 
+        "Usage: %s [ -v ] [ -p num [ -s num ] ] imagefile path\n", 
+        argv[0]);
         return 1;
     }
 
     /* Grab the MINIX disk file */
     char *minixdisk = argv[optind];
     optind++;
+    const char *path = argv[optind];
+
+    char canonical[1024];
+    canonicalize_path(path, canonical, sizeof(canonical));
 
     /* Open disk image*/
     FILE *fp = fopen(minixdisk, "rb");
@@ -239,76 +172,13 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-
-    if(DEBUG){
-        printf("optind: %d, argc: %d\n", optind, argc);
-        fflush(NULL);
-    }
-    /* path is optional */
-    const char *path = NULL;
-    // char *canonical = get_path(argc, optind, argv);
-    if (optind <= argc) {
-        if(DEBUG){
-            printf("Setting path\n");
-            fflush(NULL);
-        }
-        path = argv[optind];
-    }
-
-    if(DEBUG){
-        printf("Path: %s\n", path);
-        fflush(NULL);
-    }
-
-    // Default path => "/"
-    char canonical[1024];
-    if (!path) {
-        strncpy(canonical, "/", sizeof(canonical));
-    } else {
-        canonicalize_path(path, canonical, sizeof(canonical));
-    }
-
-    long partition_offset = 0;
-    debug("Partition %d\n", partition);
-    /* if we have a valid partition to grab (non-negative) */
-    if (partition >= 0) {
-        partition_table head[4];
-        /* read the tables in */
-        if(read_partition_table(fp, 0, head) != 0) {
-            fclose(fp);
-            return 1;
-        }
-        /* We only support 4 partitions, */
-        if (partition < 0 || partition > 3) {
-            perror("Invalid partition index");
-            fclose(fp);
-            return 1;
-        }
-        partition_offset = compute_partition_offset(&head[partition]);
-        /* handle sub partitions */
-        if (subpart >= 0) {
-            partition_table subs[4];
-            if (read_partition_table(fp, partition_offset, subs) != 0) {
-                fclose(fp);
-                return 1;
-            }
-            /* again we support only 4 subpartitoins*/
-            if (subpart < 0 || subpart > 3) {
-                fprintf(stderr, "Invalid subpartition index %d\n", subpart);
-                fclose(fp);
-                return 1;
-            }
-            partition_offset = compute_partition_offset(&subs[subpart]);
-        }
-    }
+    long partition_offset = get_partition_offset(partition, fp, subpart);
 
     superblock *sb = malloc(sizeof(superblock));
-    if(DEBUG){
-        printf("Reading superblock\n");
-        fflush(NULL);
-    }
+
     if (read_superblock(fp, partition_offset, sb)) {
         free(sb);
+        close(fp);
         return 1;
     }
     if (verbose) {
@@ -318,12 +188,14 @@ int main(int argc, char *argv[]) {
     int path_inum = find_inode_of_path(fp, sb, canonical, partition_offset);
     if (path_inum < 0) {
         fprintf(stderr, "Failed to find path: %s\n", canonical);
+        free(sb);
         fclose(fp);
         return 1;
     }
 
     print_file_info(fp, sb, path_inum, canonical, partition_offset);
 
+    free(sb);
     fclose(fp);
     return 0;
 }

@@ -525,4 +525,83 @@ int find_inode_of_path(FILE *fp,
     return curr_inode;
 }
 
+int process_args(int argc, 
+                char *argv[], 
+                int *verbose, 
+                int *partition, 
+                int *subpart, 
+                int *arg_index) {
+    /* Handle user command line arguments */
+    int opt;
+    if (DEBUG) {
+        printf("Inside process args\n");
+        fflush(NULL);
+    }   
+    while ((opt = getopt(argc, argv, "hvp:s:")) != -1) {
+        switch (opt) {
+            case 'h':
+                usage(argv[0]);
+                return 1;
+            case 'v':
+                printf("Option -v\n");
+                *verbose = 1;
+                break;
+            case 'p':
+                *partition = atoi(optarg);
+                if (*verbose) {
+                    printf("Option -p with value '%d'\n", *partition);
+                }   
+                break;
+            case 's':
+                *subpart = atoi(optarg);
+                if(*verbose){
+                    printf("Option -s with value '%d'\n", *subpart);
+                }
+                break;
+            case '?':
+                usage(argv[0]);
+                return 1;
+        }
+    }
+    *arg_index = optind;
+    return 0;
+}
+
+long get_partition_offset(int partition,
+                            FILE *fp,
+                            int subpart) {
+    /* if we have a valid partition to grab (non-negative) */
+    long partition_offset = 0;
+    if (partition >= 0) {
+        partition_table head[4];
+        /* read the tables in */
+        if(read_partition_table(fp, 0, head) != 0) {
+            fclose(fp);
+            return 1;
+        }
+        /* We only support 4 partitions, */
+        if (partition < 0 || partition > 3) {
+            perror("Invalid partition index");
+            fclose(fp);
+            return 1;
+        }
+        partition_offset = compute_partition_offset(&head[partition]);
+        /* handle sub partitions */
+        if (subpart >= 0) {
+            partition_table subs[4];
+            if (read_partition_table(fp, partition_offset, subs) != 0) {
+                fclose(fp);
+                return 1;
+            }
+            /* again we support only 4 subpartitoins*/
+            if (subpart < 0 || subpart > 3) {
+                fprintf(stderr, "Invalid subpartition index %d\n", subpart);
+                fclose(fp);
+                return 1;
+            }
+            partition_offset = compute_partition_offset(&subs[subpart]);
+        }
+    }
+    return partition_offset;
+}
 

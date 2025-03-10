@@ -1,124 +1,37 @@
 
 
 #include "minutil.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <string.h>
 
-int main(int argc, char *argv[]) {
-    int opt;
-    int verbose = 0;
-    int partition = -1;
-    int subpart = -1;
 
-    /* Process command-line options */
-    while ((opt = getopt(argc, argv, "hvp:s:")) != -1) {
-        switch (opt) {
-            case 'h':
-                usage(argv[0]);
-                return 0;
-            case 'v':
-                verbose = 1;
-                break;
-            case 'p':
-                partition = atoi(optarg);
-                break;
-            case 's':
-                subpart = atoi(optarg);
-                break;
-            default:
-                usage(argv[0]);
-                return 1;
-        }
-    }
-
-    if (optind + 1 >= argc) {
-        fprintf(stderr, 
-        "Usage: %s [ -v ] [ -p num [ -s num ] ] imagefile path\n", 
-        argv[0]);
-        return 1;
-    }
-
-    char *minixdisk = argv[optind++];
-    const char *path = argv[optind];
-
-    /* Open the MINIX disk image */
-    FILE *fp = fopen(minixdisk, "rb");
-    if (!fp) {
-        perror("Unable to open image file");
-        return 1;
-    }
-
-    /* Canonicalize the input path */
-    char canonical[1024];
-    canonicalize_path(path, canonical, sizeof(canonical));
-
-    long partition_offset = 0;
-    if (partition >= 0) {
-        partition_table head[4];
-        if (read_partition_table(fp, 0, head) != 0) {
-            fclose(fp);
-            return 1;
-        }
-        if (partition < 0 || partition > 3) {
-            fprintf(stderr, "Invalid partition index\n");
-            fclose(fp);
-            return 1;
-        }
-        partition_offset = compute_partition_offset(&head[partition]);
-        if (subpart >= 0) {
-            partition_table subs[4];
-            if (read_partition_table(fp, partition_offset, subs) != 0) {
-                fclose(fp);
-                return 1;
-            }
-            if (subpart < 0 || subpart > 3) {
-                fprintf(stderr, "Invalid subpartition index\n");
-                fclose(fp);
-                return 1;
-            }
-            partition_offset = compute_partition_offset(&subs[subpart]);
-        }
-    }
-
-    /* Read the superblock */
-    superblock *sb = malloc(sizeof(superblock));
-    if (sb == NULL) {
-        perror("malloc");
-        fclose(fp);
-        return 1;
-    }
-    if (read_superblock(fp, partition_offset, sb)) {
-        free(sb);
-        fclose(fp);
-        return 1;
-    }
-    if (verbose) {
-        print_superblock(sb);
-    }
-
-    /* Find the inode corresponding to the canonical path */
-    int inum = find_inode_of_path(fp, sb, canonical, partition_offset);
-    if (inum < 0) {
-        fprintf(stderr, "Failed to find path: %s\n", canonical);
-        free(sb);
-        fclose(fp);
-        return 1;
-    }
-
+int copy_file_info(FILE *fp, 
+                superblock *sb, 
+                int path_inum, 
+                char *path, 
+                long partition_offset) {
+    
     /* Read the inode */
     inode *in = malloc(sizeof(inode));
     if (in == NULL) {
         perror("malloc");
+        if(DEBUG){
+            printf("free b/c failed to malloc in\n");
+            fflush(NULL);
+        }
         free(sb);
         fclose(fp);
         return 1;
     }
-    if (read_inode(fp, sb, inum, in, partition_offset)) {
-        fprintf(stderr, "Failed to read inode %d\n", inum);
+    if (read_inode(fp, sb, path_inum, in, partition_offset)) {
+        fprintf(stderr, "Failed to read inode %d\n", path_inum);
+        if(DEBUG){
+            printf("free b/c failed to read_inode\n");
+            fflush(NULL);
+        }
         free(in);
+        if(DEBUG){
+            printf("free b/c failed to read_inode\n");
+            fflush(NULL);
+        }
         free(sb);
         fclose(fp);
         return 1;
@@ -126,8 +39,16 @@ int main(int argc, char *argv[]) {
 
     /* Check that the inode does not represent a directory */
     if ((in->mode & FILE_TYPE) == DIRECTORY) {
-        fprintf(stderr, "Error: %s is a directory.\n", canonical);
+        fprintf(stderr, "Error: %s is a directory.\n", path);
+        if(DEBUG){
+            printf("free b/c inode is directory\n");
+            fflush(NULL);
+        }
         free(in);
+        if(DEBUG){
+            printf("free b/c inode is directory\n");
+            fflush(NULL);
+        }
         free(sb);
         fclose(fp);
         return 1;
@@ -142,7 +63,15 @@ int main(int argc, char *argv[]) {
     int zone_count = 0;
     if (collect_zones(fp, sb, in, partition_offset, &zones, &zone_count)) {
         fprintf(stderr, "Failed to collect file zones\n");
+        if(DEBUG){
+            printf("free b/c failed to collect zones\n");
+            fflush(NULL);
+        }
         free(in);
+        if(DEBUG){
+            printf("free b/c failed to collect zones\n");
+            fflush(NULL);
+        }
         free(sb);
         fclose(fp);
         return 1;
@@ -173,21 +102,120 @@ int main(int argc, char *argv[]) {
         size_t read_bytes = fread(buffer, 1, to_read, fp);
         if (read_bytes != (size_t)to_read) {
             fprintf(stderr, "Failed to read zone data\n");
+            if(DEBUG){
+                printf("free b/c read wrong number of bytes\n");
+                fflush(NULL);
+            }
             free(buffer);
             break;
         }
         if (fwrite(buffer, 1, read_bytes, stdout) != read_bytes) {
             perror("fwrite");
+            if(DEBUG){
+                printf("free b/c wrote wrong number of bytes\n");
+                fflush(NULL);
+            }
             free(buffer);
             break;
+        }
+        if(DEBUG){
+            printf("free b/c end of loop iter\n");
+            fflush(NULL);
         }
         free(buffer);
         bytes_left -= read_bytes;
     }
 
+    if(DEBUG){
+        printf("free b/c end of function\n");
+        fflush(NULL);
+    }
     free(zones);
+    if(DEBUG){
+        printf("free b/c end of function\n");
+        fflush(NULL);
+    }
     free(in);
+    if(DEBUG){
+        printf("free b/c end of function\n");
+        fflush(NULL);
+    }
     free(sb);
     fclose(fp);
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    int verbose = 0;
+    int partition = -1;
+    int subpart = -1;
+    int optind = -1;
+
+    /* Handle flags */
+    if (process_args(argc, argv, &verbose, &partition, &subpart, &optind)) {
+        return 1;
+    }
+
+    if (optind >= argc) {
+        fprintf(stderr, 
+        "Usage: %s [ -v ] [ -p num [ -s num ] ] imagefile path\n", 
+        argv[0]);
+        return 1;
+    }
+
+    char *minixdisk = argv[optind++];
+    const char *path = argv[optind];
+
+    /* Open the MINIX disk image */
+    FILE *fp = fopen(minixdisk, "rb");
+    if (!fp) {
+        perror("Unable to open image file");
+        return 1;
+    }
+
+    /* Canonicalize the input path */
+    char canonical[1024];
+    canonicalize_path(path, canonical, sizeof(canonical));
+
+    long partition_offset = get_partition_offset(partition, fp, subpart);
+    
+
+    /* Read the superblock */
+    superblock *sb = malloc(sizeof(superblock));
+    if (sb == NULL) {
+        perror("malloc");
+        fclose(fp);
+        return 1;
+    }
+    if (read_superblock(fp, partition_offset, sb)) {
+        if(DEBUG){
+            printf("free b/c failed to read_super\n");
+            fflush(NULL);
+        }
+        free(sb);
+        fclose(fp);
+        return 1;
+    }
+    if (verbose) {
+        print_superblock(sb);
+    }
+
+    /* Find the inode corresponding to the canonical path */
+    int path_inum = find_inode_of_path(fp, sb, canonical, partition_offset);
+    if (path_inum < 0) {
+        fprintf(stderr, "Failed to find path: %s\n", canonical);
+        if(DEBUG){
+            printf("free b/c failed to find inode\n");
+            fflush(NULL);
+        }
+        free(sb);
+        fclose(fp);
+        return 1;
+    }
+
+    /* Extract out  into second function */
+    if (copy_file_info(fp, sb, path_inum, canonical, partition_offset)) {
+        return 1;
+    }
     return 0;
 }
